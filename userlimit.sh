@@ -12,6 +12,3 @@ else
 fi
 ' > /etc/userlimit
 
-chmod -v +x /etc/userlimit
-
-sed 'account    required     pam_exec.so /etc/userlimit\nauth       required     pam_exec.so /etc/userlimit /^s# Standard Un*x password updating..*/a' /etc/pam.d/sshd
