@@ -1,6 +1,6 @@
 #! /bin/bash
 
-printf "Do you want me to create a username and password ? (y/n): "
+printf "fuck ? (y/n): "
 read mup
 while [[ -z "$mup" ]] || [[ !("$mup" =~ ^[nNyY]+$) ]] || [[ ${#mup} -gt 1 ]]
 do
