@@ -15,12 +15,11 @@ fi
 
 { chmod -v +x /etc/userlimit; } &> /dev/null
 
-echo -e '\n' >> /etc/pam.d/sshd
-
 if  grep -Fxq "account    required     pam_exec.so /etc/userlimit" /etc/pam.d/sshd
 then
     :
 else
+    echo -e '\n' >> /etc/pam.d/sshd
     echo 'account    required     pam_exec.so /etc/userlimit' >> /etc/pam.d/sshd
 fi
 
