@@ -1,3 +1,3 @@
-c#!/bin/bash
+#!/bin/bash
 
 echo -e "************ XPanel ************ \n"
