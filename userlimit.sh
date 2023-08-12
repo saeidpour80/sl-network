@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo '12345' > /etc/userlimit
+echo '12345'
 
