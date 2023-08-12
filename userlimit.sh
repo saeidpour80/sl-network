@@ -1,7 +1,6 @@
 #! /bin/bash
 
-echo '
-#! /bin/bash
+echo '#! /bin/bash
 
 limit=1
 c=$(pgrep -xcu "$PAM_USER" sshd)
@@ -16,4 +15,4 @@ fi
 
 { chmod -v +x /etc/userlimit; } &> /dev/null
 
-# sed 'account    required     pam_exec.so /etc/userlimit\nauth       required     pam_exec.so /etc/userlimit /^s# Standard Un*x password updating..*/a' /etc/pam.d/sshd
+sed 'account    required     pam_exec.so /etc/userlimit\nauth       required     pam_exec.so /etc/userlimit /^s# Standard Un*x password updating..*/a' /etc/pam.d/sshd
