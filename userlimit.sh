@@ -19,14 +19,14 @@ echo -e '\n' >> /etc/pam.d/sshd
 
 if  grep -Fxq "account    required     pam_exec.so /etc/userlimit" /etc/pam.d/sshd
 then
-    echo ''
+    :
 else
     echo 'account    required     pam_exec.so /etc/userlimit' >> /etc/pam.d/sshd
 fi
 
 if  grep -Fxq "auth       required     pam_exec.so /etc/userlimit" /etc/pam.d/sshd
 then
-    echo ''
+    :
 else
     echo 'auth       required     pam_exec.so /etc/userlimit' >> /etc/pam.d/sshd
 fi
