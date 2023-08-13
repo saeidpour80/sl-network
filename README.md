@@ -1,8 +1,6 @@
 # Sl Network
 <b style="color:purple;">تست شده روی ubuntu 22.04</b>
-<span style="color:red">
-Text content
-</span>
+- ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) `#f03c15`
 <br>
 <br>
 تعریف محدودیت برای اتصال همزمان به ازای هر کاربر :
