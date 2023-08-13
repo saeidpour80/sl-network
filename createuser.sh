@@ -75,7 +75,7 @@ echo "---------------------------------------------------------"
 echo "---------------------------------------------------------"
 for (( i=1; i<=$nou; i++ ))
 do
-    username=$(printf '%s_%02d' "$up" "$i")
+    username=$(printf '%s-%02d' "$up" "$i")
     Password=$(printf '%s' "$pp")
     printf "Username : $username\tPassword : $Password\n"
     { addgroup  "$username"; } &> /dev/null
