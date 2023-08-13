@@ -1,4 +1,5 @@
 # Sl Network
+<b>تست شده روی ubuntu 22.04</b>
 تعریف محدودیت برای اتصال همزمان به ازای هر کاربر :
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/userlimit.sh --ipv4)
