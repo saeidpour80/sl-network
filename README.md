@@ -1,5 +1,5 @@
 # Sl Network
-- ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) `<b style="color:purple;">تست شده روی ubuntu 22.04</b>`
+- ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) `تست شده روی ubuntu 22.04`
 <br>
 <br>
 تعریف محدودیت برای اتصال همزمان به ازای هر کاربر :
