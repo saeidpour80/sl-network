@@ -76,7 +76,7 @@ echo "---------------------------------------------------------"
 for (( i=1; i<=$nou; i++ ))
 do
     username=$(printf '%s_%02d' "$up" "$i")
-    Password=$(printf '%s%02d' "$pp" "$i")
+    Password=$(printf '%s' "$pp")
     printf "Username : $username\tPassword : $Password\n"
     { addgroup  "$username"; } &> /dev/null
     useradd -c "$username" -g "$username" -M -p "$Password" -s /bin/false "$username"
