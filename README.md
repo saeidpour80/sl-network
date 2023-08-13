@@ -1,5 +1,5 @@
 # Sl Network
-<b style="font-weight:bold;font-size:50px;">تست شده روی ubuntu 22.04</b>
+<p style="font-weight:bold;font-size:50px;">تست شده روی ubuntu 22.04</p>
 <br>
 <br>
 تعریف محدودیت برای اتصال همزمان به ازای هر کاربر :
