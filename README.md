@@ -19,7 +19,7 @@ Username prefix : user<br>
 Password prefix : abcd<br>
 Number of users : 50<br>
 <br>
-Username : user_01&nbsp;Password : abcd01<br>
+Username : user_01&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd01<br>
 Username : user_02&nbsp;Password : abcd02<br>
 .<br>
 .<br>
