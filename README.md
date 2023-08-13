@@ -1,5 +1,8 @@
 # Sl Network
-<h1 style="color:purple;">تست شده روی ubuntu 22.04</h1>
+<b style="color:purple;">تست شده روی ubuntu 22.04</b>
+<span style="color:red">
+Text content
+</span>
 <br>
 <br>
 تعریف محدودیت برای اتصال همزمان به ازای هر کاربر :
