@@ -25,7 +25,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 printf "\n"
-echo -e "1) User connection limit"
+echo -e "1) ${RED}User connection limit${NC}"
 echo -e "2) User connection limit + User expiration date"
 echo -e "3) User connection limit + Set expiration date after first connection"
 echo -e "4) User connection limit + User expiration date + Set expiration date after first connection"
