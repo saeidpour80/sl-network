@@ -21,7 +21,7 @@ echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 printf "\n"
-echo -e "1) \e033[1;31mUser connection limit\e[0m"
+echo -e "1) \033[4;31mUser connection limit\[0m"
 echo -e "2) User connection limit + User expiration date"
 echo -e "3) User connection limit + Set expiration date after first connection"
 echo -e "4) User connection limit + User expiration date + Set expiration date after first connection"
