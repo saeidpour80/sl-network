@@ -2,7 +2,7 @@
 :green_circle: <b>تست شده روی ubuntu 22.04</b>
 <br>
 <br>
-تعریف محدودیت برای اتصال همزمان به ازای هر کاربر :
+## تعریف محدودیت برای اتصال همزمان به ازای هر کاربر :
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/userlimit.sh --ipv4)
 ```
@@ -13,7 +13,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/
 4 - اعمال محدودیت روی تعداد اتصال همزمان به ازای هر کاربر + مسدود کردن کاربر سر ساعت 12 شب به وقت ایران متناسب با تاریخ انقضا تعریف شده در لینوکس + تنظیم تاریخ انقضا برای کاربر بعد از اولین اتصال<br>
 <br>
 <br>
-ساخت کاربر جدید به تعداد دلخواه :
+## ساخت کاربر جدید به تعداد دلخواه :
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/createuser.sh --ipv4)
 ```
@@ -34,7 +34,7 @@ Username : user_50&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd50<br>
 <br>
 <br>
 
-رفع مشکل تماس صوتی و تصویری در پروتکول SSH :
+## رفع مشکل تماس صوتی و تصویری در پروتکول SSH :
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/udpgw.sh --ipv4)
 ```
