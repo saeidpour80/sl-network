@@ -17,11 +17,6 @@ bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/createuser.sh --ipv4)
 ```
-ابتدا پیشوند نام کاربری و پیشوند رمز عبور را وارد کنید و سپس تعداد کاربرانی که میخواهید ایجاد شوند :<br>
-
-
-
-<br>
 <br>
 رفع مشکل تماس صوتی و تصویری در پروتکول SSH :
 ```
