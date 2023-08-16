@@ -52,3 +52,5 @@ ufw enable
 apt install nano -y
 sed -i "s/#Port 22/Port $sshport/" /etc/ssh/sshd_config
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/udpgw.sh --ipv4)
+bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/userlimit.sh --ipv4)
+reboot
