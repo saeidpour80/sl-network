@@ -44,6 +44,7 @@ then
     sshport=22
 fi
 
+timedatectl set-timezone Asia/Tehran
 apt update -y
 apt upgrade -y
 apt install ufw -y
