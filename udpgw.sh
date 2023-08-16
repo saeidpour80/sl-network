@@ -44,8 +44,8 @@ then
     udpport=7300
 fi
 
-apt update -y
-apt install git cmake -y
+NEEDRESTART_MODE=a apt update -y
+NEEDRESTART_MODE=a apt install git cmake -y
 git clone https://github.com/ambrop72/badvpn.git /root/badvpn
 mkdir /root/badvpn/badvpn-build
 cd  /root/badvpn/badvpn-build
