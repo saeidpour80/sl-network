@@ -18,7 +18,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/createuser.sh --ipv4)
 ```
 ابتدا پیشوند نام کاربری و پیشوند رمز عبور را وارد کنید و سپس تعداد کاربرانی که میخواهید ایجاد شوند :<br>
-<p style="width:100%;text-align:left;">
+<p align="left">
 Username prefix : user<br>
 Password prefix : abcd<br>
 Number of users : 50<br>
