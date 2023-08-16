@@ -36,3 +36,6 @@ Username : user_50&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd50<br>
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/udpgw.sh --ipv4)
 ```
+```
+bash <(curl -Ls https://raw.githubusercontent.com/xpanel-cp/XPanel-SSH-User-Management/master/fix-call.sh --ipv4)
+```
