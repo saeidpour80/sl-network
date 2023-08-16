@@ -18,10 +18,21 @@ bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/createuser.sh --ipv4)
 ```
 ابتدا پیشوند نام کاربری و پیشوند رمز عبور را وارد کنید و سپس تعداد کاربرانی که میخواهید ایجاد شوند :<br>
-
+<p style="width:100%;text-align:left;">
+Username prefix : user<br>
+Password prefix : abcd<br>
+Number of users : 50<br>
+<br>
+Username : user_01&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd01<br>
+Username : user_02&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd02<br>
+.<br>
+.<br>
+.<br>
+Username : user_50&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd50<br>
+</p>
 <br>
 <br>
-رفع مشکل تماس صوتی و تصویری در پروتکول SSH :
+رفع مشکل تماس صوتی و تصویری در پروتکول  :
 ```
-bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/udpgw.sh --ipv4)
+bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/createuser.sh --ipv4)
 ```
