@@ -19,7 +19,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/
 ```
 
 <br>
-
+رفع مشکل تماس صوتی و تصویری در پروتکلول SSH :
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/master/udpgw.sh --ipv4)
 ```
