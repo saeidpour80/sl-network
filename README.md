@@ -23,12 +23,12 @@ Username prefix : user<br>
 Password prefix : abcd<br>
 Number of users : 50<br>
 <br>
-Username : user_01&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd01<br>
-Username : user_02&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd02<br>
+Username : user-1&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd1<br>
+Username : user-2&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd2<br>
 .<br>
 .<br>
 .<br>
-Username : user_50&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd50<br>
+Username : user-50&nbsp;&nbsp;&nbsp;&nbsp;Password : abcd50<br>
 </p>
 
 <br>
