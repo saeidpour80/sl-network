@@ -50,7 +50,7 @@ done
 
 printf "\n${White}Password prefix : ${Color_Off}"
 read pp
-while [[ -z "$pp" ]] || [[ "$pp" == *" "* ]] || [[ "$pp" == *"-"* ]] || [[ "$pp" == *"_"* ]] || [[ "$pp" == *"@"* ]]
+while [[ -z "$pp" ]] || [[ "$pp" == *" "* ]]
 do
     printf "\n"
     if [[ -z "$pp" ]]
@@ -60,10 +60,6 @@ do
     if [[ "$pp" == *" "* ]]
     then
         echo -e "${Red}The Password prefix cannot contain spaces, Try again${Color_Off}"
-    fi
-    if [[ "$pp" == *"-"* ]] || [[ "$pp" == *"_"* ]] || [[ "$pp" == *"@"* ]]
-    then
-        echo -e "${Red}The Password prefix cannot contain these characters : -_@, Try again${Color_Off}"
     fi
     printf "${White}Password prefix : ${Color_Off}"
     read pp
