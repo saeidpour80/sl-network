@@ -1,0 +1,34 @@
+#! /bin/bash
+
+# Check if the service is installed
+if sudo systemctl is-enabled --quiet tunnel.service; then
+    # Service is installed, stop it
+    sudo systemctl stop tunnel.service > /dev/null 2>&1
+
+    if sudo systemctl is-active --quiet tunnel.service; then
+        echo "Tunnel service failed to stop."
+    else
+        echo "Tunnel service stopped."
+    fi
+else
+    echo "Multiport Tunnel is not installed."
+fi
+
+sleep 1
+
+# Check if the service is installed
+if sudo systemctl is-enabled --quiet tunnel.service; then
+    # Service is installed, start it
+    sudo systemctl start tunnel.service > /dev/null 2>&1
+
+    if sudo systemctl is-active --quiet tunnel.service; then
+        echo "Tunnel service started."
+    else
+        echo "Tunnel service failed to start."
+    fi
+else
+    echo "Multiport Tunnel is not installed."
+fi
+
+date=$(date +"%Y-%m-%d %H:%M:%S")
+echo "$date" >> /bin/re.txt

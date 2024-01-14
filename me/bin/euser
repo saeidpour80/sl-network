@@ -1,0 +1,63 @@
+#! /bin/bash
+
+printf "Should I calculate the extension of the user's expiration date from today's date ? (y/n): "
+read eu
+while [[ -z "$eu" ]] || [[ !("$eu" =~ ^[nNyY]+$) ]] || [[ ${#eu} -gt 1 ]]
+do
+    echo "Invalid value, Try again"
+    printf "Should I calculate the extension of the user's expiration date from today's date ? (y/n): "
+    read eu
+done
+
+lowereu=$(echo "$eu" | tr '[:upper:]' '[:lower:]')
+
+printf "Username : "
+read username
+
+if [[ "$lowereu" == "y" ]]
+then
+    printf "day : "
+    read da
+    while [[ !("$da" =~ ^[0-9]+$) ]]
+    do
+        echo "Invalid value, Try again"
+        printf "day : "
+        read da
+    done
+
+    da=$(($da + 1))
+
+    accountexpires=$(date -d "+$da days" +%Y-%m-%d)
+else
+    printf "date : "
+    read manualdate
+    while [[ !("$manualdate" =~ ^[0-9-]+$) ]] || [[ ${#manualdate} -ne 10 ]]
+    do
+        echo "Invalid value, Try again"
+        printf "date : "
+        read manualdate
+    done
+    printf "day : "
+    read da
+    while [[ !("$da" =~ ^[0-9]+$) ]]
+    do
+        echo "Invalid value, Try again"
+        printf "day : "
+        read da
+    done
+
+    da=$(($da + 1))
+
+    IFS='-'
+    read -a mdate <<< "$manualdate"
+
+    year=${mdate[0]}
+    month=${mdate[1]}
+    day=${mdate[2]}
+
+    accountexpires=$(date -d "$year$month$day+$da days" +%Y-%m-%d)
+
+fi
+
+echo "$accountexpires"
+usermod -e "$accountexpires" "$username"

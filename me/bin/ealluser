@@ -1,0 +1,60 @@
+#! /bin/bash
+
+if command -v lsof > /dev/null 2>&1; then
+    :
+else
+    NEEDRESTART_MODE=a apt install lsof -y
+fi
+
+clear
+
+printf "How many days should be added to the expiration date of users ? "
+read eu
+while [[ !("$eu" =~ ^[0-9]+$) ]]
+do
+    echo "Invalid value, Try again"
+    printf "How many days should be added to the expiration date of users ? "
+    read eu
+done
+
+allusers=$(cut -d: -f1,3 /etc/passwd | egrep ':[0-9]{4}$' | cut -d: -f1)
+
+allusers=$(echo "$allusers" | xargs)
+
+IFS=' '
+read -ra au <<< "$allusers"
+
+for user in "${au[@]}"
+do
+    getname=$(getent passwd "$user")
+    IFS=':'
+    read -ra gname <<< "$getname"
+
+    expirationtime=$(chage -l "$user" | grep 'Account expires')
+    et=${expirationtime#*: }
+    math=999999
+    if [[ "$et" != "never" ]]
+    then
+        accountexpires=$(date -d "$et" +%Y-%m-%d)
+        expirationtime=$(date +"%s" -d "$et")
+        timenow=$(date +"%s")
+        math=$((expirationtime-timenow))
+    else
+        accountexpires="Never"
+    fi
+    if [[ "$accountexpires" != "Never" && $math -gt 0 ]]
+    then
+        IFS='-'
+        read -a mdate <<< "$accountexpires"
+
+        year=${mdate[0]}
+        month=${mdate[1]}
+        day=${mdate[2]}
+
+        accountexpires2=$(date -d "$year$month$day+$eu days" +%Y-%m-%d)
+
+        usermod -e "$accountexpires2" "$user"
+
+        printf '%-26s | %-32s | %-10s ----> %-10s\n' "$user" "${gname[4]}" "$accountexpires" "$accountexpires2"
+    fi
+done

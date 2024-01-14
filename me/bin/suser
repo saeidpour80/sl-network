@@ -1,0 +1,154 @@
+#! /bin/bash
+
+if command -v lsof > /dev/null 2>&1; then
+    :
+else
+    NEEDRESTART_MODE=a apt install lsof -y
+fi
+
+clear
+
+Color_Off='\033[0m'       # Text Reset
+Black='\033[0;30m'        # Black
+Red='\033[0;31m'          # Red
+Green='\033[0;32m'        # Green
+Yellow='\033[0;33m'       # Yellow
+Blue='\033[0;34m'         # Blue
+Purple='\033[0;35m'       # Purple
+Cyan='\033[0;36m'         # Cyan
+White='\033[0;37m'        # White
+
+allusers=$(cut -d: -f1,3 /etc/passwd | egrep ':[0-9]{4}$' | cut -d: -f1)
+
+allusers=$(echo "$allusers" | xargs)
+
+IFS=' '
+read -ra au <<< "$allusers"
+
+if [[ -z "$1" || "$1" == "help" || "$1" == "h" ]]
+then
+    echo -e "suser n/fn/ne/te/e/all\n"
+    echo "n ----> Expiration Date : Never"
+    echo "fn ---> Expiration Date : More than 5 days left until expiration"
+    echo "ne ---> Expiration Date : 5 days or less until expiration"
+    echo "te ---> Expiration Date : 1 day or less until expiration"
+    echo "e ----> Expiration Date : Expired"
+    echo "all --> Expiration Date : Everything"
+else
+    echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+    echo -e "${White}|${Color_Off}${Cyan}           Username           ${Color_Off}${White}|${Color_Off}${Cyan}            Full Name            ${Color_Off}${White}|${Color_Off}${Cyan} Limit ${Color_Off}${White}|${Color_Off}${Cyan}    Expiration Date    ${Color_Off}${White}|${Color_Off}${Cyan}  Status  ${Color_Off}${White}|${Color_Off}${Cyan}                  Activity                  ${Color_Off}${White}|${Color_Off}"
+    echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+    for user in "${au[@]}"
+    do
+        getname=$(getent passwd "$user")
+        IFS=':'
+        read -ra gname <<< "$getname"
+
+        ug=$(groups "$user")
+        usersgroup=${ug#*: }
+        limit=""
+        if [[ "$usersgroup" == "vpn1user" ]]
+    	then
+            limit="1"
+    	elif [[ "$usersgroup" == "vpn2user" ]]
+    	then
+            limit="2"
+    	elif [[ "$usersgroup" == "vpn3user" ]]
+    	then
+            limit="3"
+    	else
+            limit="4"
+    	fi
+
+        expirationtime=$(chage -l "$user" | grep 'Account expires')
+        et=${expirationtime#*: }
+        math=999999
+        if [[ "$et" != "never" ]]
+        then
+            accountexpires=$(date -d "$et" +%Y-%m-%d)
+            expirationtime=$(date +"%s" -d "$et")
+            timenow=$(date +"%s")
+            math=$((expirationtime-timenow))
+        else
+            accountexpires="Never"
+        fi
+
+        port=$(grep -oE 'Port [0-9]+' /etc/ssh/sshd_config | cut -d' ' -f2)
+        sou=$(sudo lsof -i :$port -n | grep ESTABLISHED | grep $user)
+        status=""
+        if [[ $sou ]]
+        then
+            status="Online"
+            scolor="\033[0;32m"
+        else
+            status="Offline"
+            scolor="\033[0;37m"
+        fi
+
+        activityhistory=$(cat /etc/useractivityhistory.txt | grep "$user")
+        IFS=','
+        read -ra ah <<< "$activityhistory"
+        if [[ -z ${ah[2]} ]]
+        then
+            activity="${ah[1]} | Now"
+        else
+            activity="${ah[1]} | ${ah[2]}"
+        fi
+
+        if [[ "$1" == "n" ]]
+        then
+            if [[ "$accountexpires" == "Never" && $math -eq 999999 ]]
+            then
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${White}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+            fi
+        elif [[ "$1" == "fn" ]]
+        then
+            if [[ "$accountexpires" != "Never" && $math -gt 432000 ]]
+            then
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${White}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+            fi
+        elif [[ "$1" == "ne" ]]
+        then
+            if [[ $math -le 432000 && $math -gt 86400 ]]
+            then
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Yellow}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+            elif [[ $math -le 86400 && $math -gt 0 ]]
+            then
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+            fi
+        elif [[ "$1" == "te" ]]
+        then
+            if [[ $math -le 86400 && $math -gt 0 ]]
+            then
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+            fi
+        elif [[ "$1" == "e" ]]
+        then
+            if [[ $math -le 0 ]]
+            then
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-10s (Expired)  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+            fi
+        elif [[ "$1" == "all" ]]
+        then
+            if [[ $math -gt 432000 ]]
+            then
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${White}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+            elif [[ $math -le 432000 && $math -gt 86400 ]]
+            then
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Yellow}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+            elif [[ $math -le 86400 && $math -gt 0 ]]
+            then
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+            else
+                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-10s (Expired)  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+            fi
+            echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+        fi
+    done
+fi
