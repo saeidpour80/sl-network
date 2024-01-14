@@ -72,8 +72,7 @@ then
     echo "Server ($SERVER_NAME) Is OK In Iran"
 else
     hour=$(date "+%H")
-    hour=$(($hour))
-    if [[ $hour -ge 2 && $hour -le 8 ]]
+    if [[ ${hour#0} -ge 2 && ${hour#0} -le 8 ]]
     then
         clir.sh
     fi
