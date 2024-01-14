@@ -1,0 +1,55 @@
+#! /bin/bash
+
+expirationtime=$(chage -l "$PAM_USER" | grep 'Account expires')
+et=${expirationtime#*: }
+if [[ "$et" == "never" ]]
+then
+    math=1
+else
+    expirationtime=$(date +"%s" -d "$et")
+    timenow=$(date +"%s")
+    math=$((expirationtime-timenow))
+fi
+
+if [[ $math -gt 0 ]]
+then
+    ug=$(groups "$PAM_USER")
+    usersgroup=${ug#*: }
+    limit=0
+
+    if [[ "$usersgroup" == "vpn1user" ]]
+    then
+        limit=1
+    elif [[ "$usersgroup" == "vpn2user" ]]
+    then
+        limit=2
+    elif [[ "$usersgroup" == "vpn3user" ]]
+    then
+        limit=3
+    else
+        limit=4
+    fi
+
+    c=$(ps -u "$PAM_USER" | grep sshd | wc -l)
+    if [[ "$PAM_USER" != "root" ]] && [[ $c -ge $limit ]]
+    then
+        exit 1
+    else
+        iue=$(cat /etc/useractivityhistory.txt | grep "$PAM_USER")
+        date=$(date +"%Y-%m-%d %H:%M:%S")
+        if [[ $iue ]]
+        then
+            if [[ $c -eq 0 ]]
+            then
+                sed "/$PAM_USER/d" /etc/useractivityhistory.txt > /tmp/ul && mv /tmp/ul /etc/useractivityhistory.txt
+                { rm /tmp/ul; } &> /dev/null
+                echo "$PAM_USER,$date," >> /etc/useractivityhistory.txt
+            fi
+        else
+            echo "$PAM_USER,$date," >> /etc/useractivityhistory.txt
+        fi
+        exit 0
+    fi
+else
+    exit 1
+fi

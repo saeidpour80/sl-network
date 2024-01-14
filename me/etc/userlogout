@@ -1,0 +1,17 @@
+#! /bin/bash
+
+c=$(ps -u "$PAM_USER" | grep sshd | wc -l)
+if [[ "$PAM_TYPE" == "close_session" ]] && [[ $c -le 1 ]]
+then
+    iue=$(cat /etc/useractivityhistory.txt | grep "$PAM_USER")
+    date=$(date +"%Y-%m-%d %H:%M:%S")
+    if [[ $iue ]]
+    then
+        IFS=','
+        read -ra x <<< "$iue"
+        sed "/$PAM_USER/d" /etc/useractivityhistory.txt > /tmp/ul && mv /tmp/ul /etc/useractivityhistory.txt
+        { rm /tmp/ul; } &> /dev/null
+        echo "${x[0]},${x[1]},$date" >> /etc/useractivityhistory.txt
+    fi
+fi
+exit 0
