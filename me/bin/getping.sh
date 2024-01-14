@@ -14,7 +14,7 @@ myip=$(hostname -I | awk '{print $1}')
 
 ping_check_request_id=$(curl -H "Accept: application/json" "https://check-host.net/check-ping?host=$myip" | awk -F '"request_id":"' '{print $2}' | awk -F '"}' '{print $1}')
 
-sleep 20
+sleep 25
 
 ir1_ping_check_results=$(curl -H "Accept: application/json" "https://check-host.net/check-result/$ping_check_request_id" | awk -F '"ir1.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
 ir3_ping_check_results=$(curl -H "Accept: application/json" "https://check-host.net/check-result/$ping_check_request_id" | awk -F '"ir3.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
@@ -72,7 +72,7 @@ then
     echo "Server ($SERVER_NAME) Is OK In Iran"
 else
     hour=$(date "+%H")
-    if [[ ${hour#0} -ge 2 && ${hour#0} -le 8 ]]
+    if [[ ${hour#0} -ge 3 && ${hour#0} -le 8 ]]
     then
         clir.sh
     fi
