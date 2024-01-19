@@ -40,20 +40,6 @@ do
     IFS=':'
     read -ra gname <<< "$getname"
     printf '%-26s---------> %s\n' "${ousort[$i]}" "${gname[4]}"
-    expirationtime=$(chage -l "${ousort[$i]}" | grep 'Account expires')
-    et=${expirationtime#*: }
-    if [[ "$et" == "never" ]]
-    then
-        math=1
-    else
-        expirationtime=$(date +"%s" -d "$et")
-        timenow=$(date +"%s")
-        math=$((expirationtime-timenow))
-    fi
-    if [[ $math -le 0 ]]
-    then
-        pkill -u ${ousort[$i]}
-    fi
     i=$(($i + 1))
 done
 
