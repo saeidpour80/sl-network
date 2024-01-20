@@ -19,7 +19,7 @@ curl -s -X PUT "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/
         \"ttl\": 1
     }"
 
-sleep 5
+sleep 5s
 
 A_record="sne1s.sl-network.net"
 A_record_id="da52c7ded9b90ab23076a56b9d49bf1f"
