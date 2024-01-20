@@ -16,10 +16,12 @@ ping_check_request_id=$(curl -H "Accept: application/json" "https://check-host.n
 
 sleep 30s
 
-ir1_ping_check_results=$(curl -H "Accept: application/json" "https://check-host.net/check-result/$ping_check_request_id" | awk -F '"ir1.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
-ir3_ping_check_results=$(curl -H "Accept: application/json" "https://check-host.net/check-result/$ping_check_request_id" | awk -F '"ir3.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
-ir5_ping_check_results=$(curl -H "Accept: application/json" "https://check-host.net/check-result/$ping_check_request_id" | awk -F '"ir5.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
-ir6_ping_check_results=$(curl -H "Accept: application/json" "https://check-host.net/check-result/$ping_check_request_id" | awk -F '"ir6.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
+results=$(curl -H "Accept: application/json" "https://check-host.net/check-result/$ping_check_request_id")
+
+ir1_ping_check_results=$(echo "$results" | awk -F '"ir1.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
+ir3_ping_check_results=$(echo "$results" | awk -F '"ir3.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
+ir5_ping_check_results=$(echo "$results" | awk -F '"ir5.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
+ir6_ping_check_results=$(echo "$results" | awk -F '"ir6.node.check-host.net":[][{}][][{}]' '{print $2}' | awk -F ']],"' '{print $1}')
 
 ir1=0
 ir3=0
