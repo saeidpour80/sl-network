@@ -28,11 +28,11 @@ ug=$(groups "$username")
 currentusersgroup=${ug#*: }
 
 usermod -g "$group" "$username"
-sleep .5
+sleep .5s
 deluser "$username" "$currentusersgroup"
-sleep .5
+sleep .5s
 adduser "$username" "$group"
-sleep .5
+sleep .5s
 
 vpn1user=$(getent group vpn1user)
 vpn2user=$(getent group vpn2user)
