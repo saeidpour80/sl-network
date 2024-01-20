@@ -14,7 +14,7 @@ myip=$(hostname -I | awk '{print $1}')
 
 ping_check_request_id=$(curl -H "Accept: application/json" "https://check-host.net/check-ping?host=$myip" | awk -F '"request_id":"' '{print $2}' | awk -F '"}' '{print $1}')
 
-sleep 30s
+sleep 25s
 
 results=$(curl -H "Accept: application/json" "https://check-host.net/check-result/$ping_check_request_id")
 
