@@ -63,3 +63,7 @@ port=$(grep -oE 'Port [0-9]+' /root/restore/sshd_config | cut -d' ' -f2)
 sed -i "s/#Port 22/Port $port/" /etc/ssh/sshd_config
 sleep 1s
 rm -rf /root/restore
+
+sleep 1s
+
+reboot
