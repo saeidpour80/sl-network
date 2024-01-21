@@ -90,49 +90,47 @@ else
     fspasse=$(echo  "$fspass" | base64)
 fi
 
-fspassd=$(echo "$fspasse" | base64 --decode)
-
 echo ""
 
 echo '#!/usr/bin/expect' >> /bin/getbackup.sh
 echo '' >> /bin/getbackup.sh
 echo "spawn scp -o StrictHostKeyChecking=no -P $fsport root@$fsip:/etc/useractivityhistory.txt /etc/" >> /bin/getbackup.sh
 echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$fspassd\r\"" >> /bin/getbackup.sh
+echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
 echo 'expect eof' >> /bin/getbackup.sh
 echo "spawn scp -P $fsport root@$fsip:/etc/passwd /etc/" >> /bin/getbackup.sh
 echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$fspassd\r\"" >> /bin/getbackup.sh
+echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
 echo 'expect eof' >> /bin/getbackup.sh
 echo '' >> /bin/getbackup.sh
 echo "spawn scp -P $fsport root@$fsip:/etc/group /etc/" >> /bin/getbackup.sh
 echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$fspassd\r\"" >> /bin/getbackup.sh
+echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
 echo 'expect eof' >> /bin/getbackup.sh
 echo '' >> /bin/getbackup.sh
 echo "spawn scp -P $fsport root@$fsip:/etc/shadow /etc/" >> /bin/getbackup.sh
 echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$fspassd\r\"" >> /bin/getbackup.sh
+echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
 echo 'expect eof' >> /bin/getbackup.sh
 echo '' >> /bin/getbackup.sh
 echo "spawn scp -P $fsport root@$fsip:/etc/gshadow /etc/" >> /bin/getbackup.sh
 echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$fspassd\r\"" >> /bin/getbackup.sh
+echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
 echo 'expect eof' >> /bin/getbackup.sh
 echo '' >> /bin/getbackup.sh
 echo "spawn scp -r -P $fsport root@$fsip:/etc/letsencrypt /etc/" >> /bin/getbackup.sh
 echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$fspassd\r\"" >> /bin/getbackup.sh
+echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
 echo 'expect eof' >> /bin/getbackup.sh
 echo '' >> /bin/getbackup.sh
 echo "spawn scp -r -P $fsport root@$fsip:/etc/x-ui /etc/" >> /bin/getbackup.sh
 echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$fspassd\r\"" >> /bin/getbackup.sh
+echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
 echo 'expect eof' >> /bin/getbackup.sh
 chmod -v +x /bin/getbackup.sh
 getbackup.sh 
 sleep 1s
-# rm /bin/getbackup.sh
+rm /bin/getbackup.sh
 
 echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 bash <(curl -fsSL https://raw.githubusercontent.com/radkesvat/ReverseTlsTunnel/master/scripts/RtTunnel.sh)
