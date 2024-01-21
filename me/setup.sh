@@ -142,7 +142,7 @@ echo ""
 
 echo '#!/usr/bin/expect' >> /bin/getbackup.sh
 echo '' >> /bin/getbackup.sh
-echo 'set timeout 60' >> /bin/setuptunnel.sh
+echo 'set timeout 60' >> /bin/getbackup.sh
 echo "spawn scp -o StrictHostKeyChecking=no -P $fsport root@$fsip:/etc/useractivityhistory.txt /etc/" >> /bin/getbackup.sh
 echo 'expect "password:"' >> /bin/getbackup.sh
 echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
@@ -184,7 +184,7 @@ rm /bin/getbackup.sh
 echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 echo '#!/usr/bin/expect' >> /bin/setupxui.sh
 echo '' >> /bin/setupxui.sh
-echo 'set timeout 60' >> /bin/setuptunnel.sh
+echo 'set timeout 60' >> /bin/setupxui.sh
 echo 'spawn x-ui' >> /bin/setupxui.sh
 echo 'expect "Please enter your selection"' >> /bin/setupxui.sh
 echo 'send "18\r"' >> /bin/setupxui.sh
@@ -232,7 +232,7 @@ echo 'expect "Please Enter Password"' >> /bin/setuptunnel.sh
 echo "send \"$(echo "$istpasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
 echo 'expect eof' >> /bin/setuptunnel.sh
 echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
+echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$(echo "$fsipe" | base64 --decode)" >> /bin/setuptunnel.sh
 echo 'expect "password:"' >> /bin/setuptunnel.sh
 echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
 echo 'expect "#"' >> /bin/setuptunnel.sh
@@ -250,8 +250,8 @@ echo 'expect eof' >> /bin/setuptunnel.sh
 chmod -v +x /bin/setuptunnel.sh
 setuptunnel.sh
 sleep 1s
-#rm /bin/setuptunnel.sh
-#rm /bin/installtunnel.sh
+rm /bin/setuptunnel.sh
+rm /bin/installtunnel.sh
 
 port=$(grep -oE 'Port [0-9]+' /etc/ssh/sshd_config | cut -d' ' -f2)
 mkdir /root/iptables_rules
@@ -273,5 +273,5 @@ chmod -v +x /root/iptables_rules/apply.sh
 
 sleep 5s
 
-#systemctl restart sshd
-#systemctl restart ssh
+systemctl restart sshd
+systemctl restart ssh
