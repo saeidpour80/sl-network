@@ -132,7 +132,7 @@ echo 'expect eof' >> /bin/getbackup.sh
 chmod -v +x /bin/getbackup.sh
 getbackup.sh 
 sleep 1s
-rm /bin/getbackup.sh
+# rm /bin/getbackup.sh
 
 echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 bash <(curl -fsSL https://raw.githubusercontent.com/radkesvat/ReverseTlsTunnel/master/scripts/RtTunnel.sh)
