@@ -151,7 +151,9 @@ echo 'iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT' >> /root
 echo 'iptables -I INPUT 1 -i lo -j ACCEPT' >> /root/iptables_rules/apply.sh
 echo 'iptables -A INPUT -j DROP' >> /root/iptables_rules/apply.sh
 chmod -v +x /root/iptables_rules/apply.sh
+sleep 2s
 /root/iptables_rules/apply.sh
+sleep 2s
 /root/iptables_rules/apply.sh
 
 sleep 5s
