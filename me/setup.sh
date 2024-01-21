@@ -69,6 +69,12 @@ clear
 
 printf "Foreign server IP : "
 read fsip
+while [[ -z "$fsip" ]] || [[ !("$fsip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
+do
+    echo "Invalid value, Try again"
+    printf "Foreign server IP : "
+    read fsip
+done
 printf "Foreign server Port : "
 read fsport
 while [[ !( -z "$fsport" ) ]] && [[ !("$fsport" =~ ^[0-9]+$) ]]
@@ -89,11 +95,54 @@ then
 else
     fspasse=$(echo  "$fspass" | base64)
 fi
+printf "Iran server IP : "
+read isip
+while [[ !( -z "$isip" ) ]] && [[ !("$isip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
+do
+    echo "Invalid value, Try again"
+    printf "Iran server IP : "
+    read isip
+done
+if [[ -z "$isip" ]]
+then
+    isipe="MzcuMzIuMTMuMjcK"
+else
+    isipe=$(echo  "$isip" | base64)
+fi
+printf "Iran server port : "
+read isport
+while [[ !( -z "$isport" ) ]] && [[ !("$isport" =~ ^[0-9]+$) ]]
+do
+    echo "Invalid value, Try again"
+    printf "Iran server port : "
+    read isport
+done
+if [[ -z "$isport" ]]
+then
+    isport="22"
+fi
+printf "Iran server password : "
+read ispass
+if [[ -z "$ispass" ]]
+then
+    ispasse="JEA3MDgyNDQwU2EK"
+else
+    ispasse=$(echo  "$ispass" | base64)
+fi
+printf "Iran server tunnel password : "
+read istpass
+if [[ -z "$istpass" ]]
+then
+    istpasse="JEA3MDgyNDQwU2EK"
+else
+    istpasse=$(echo  "$istpass" | base64)
+fi
 
 echo ""
 
 echo '#!/usr/bin/expect' >> /bin/getbackup.sh
 echo '' >> /bin/getbackup.sh
+echo 'set timeout 60' >> /bin/setuptunnel.sh
 echo "spawn scp -o StrictHostKeyChecking=no -P $fsport root@$fsip:/etc/useractivityhistory.txt /etc/" >> /bin/getbackup.sh
 echo 'expect "password:"' >> /bin/getbackup.sh
 echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
@@ -135,6 +184,7 @@ rm /bin/getbackup.sh
 echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 echo '#!/usr/bin/expect' >> /bin/setupxui.sh
 echo '' >> /bin/setupxui.sh
+echo 'set timeout 60' >> /bin/setuptunnel.sh
 echo 'spawn x-ui' >> /bin/setupxui.sh
 echo 'expect "Please enter your selection"' >> /bin/setupxui.sh
 echo 'send "18\r"' >> /bin/setupxui.sh
@@ -160,7 +210,48 @@ setupxui.sh
 sleep 1s
 rm /bin/setupxui.sh
 
-bash <(curl -fsSL https://raw.githubusercontent.com/radkesvat/ReverseTlsTunnel/master/scripts/RtTunnel.sh)
+echo '#!/bin/bash' >> /bin/installtunnel.sh
+echo '' >> /bin/installtunnel.sh
+echo 'bash <(curl -fsSL https://raw.githubusercontent.com/radkesvat/ReverseTlsTunnel/master/scripts/RtTunnel.sh)' >> /bin/installtunnel.sh
+chmod -v +x /bin/installtunnel.sh
+echo '#!/usr/bin/expect' >> /bin/setuptunnel.sh
+echo '' >> /bin/setuptunnel.sh
+echo 'set timeout 60' >> /bin/setuptunnel.sh
+echo 'spawn installtunnel.sh' >> /bin/setuptunnel.sh
+echo 'expect "Please choose"' >> /bin/setuptunnel.sh
+echo 'send "1\r"' >> /bin/setuptunnel.sh
+echo 'expect "Do you want to install the Latest version?"' >> /bin/setuptunnel.sh
+echo 'send "yes\r"' >> /bin/setuptunnel.sh
+echo 'expect "Which server do you want to use?"' >> /bin/setuptunnel.sh
+echo 'send "2\r"' >> /bin/setuptunnel.sh
+echo 'expect "Please Enter SNI"' >> /bin/setuptunnel.sh
+echo 'send "\r"' >> /bin/setuptunnel.sh
+echo 'expect "Please Enter IRAN IP"' >> /bin/setuptunnel.sh
+echo "send \"$(echo "$isipe" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+echo 'expect "Please Enter Password"' >> /bin/setuptunnel.sh
+echo "send \"$(echo "$istpasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+echo 'expect eof' >> /bin/setuptunnel.sh
+echo 'set timeout 5' >> /bin/setuptunnel.sh
+echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
+echo 'expect "password:"' >> /bin/setuptunnel.sh
+echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+echo 'expect "#"' >> /bin/setuptunnel.sh
+echo 'send "shutdown -h now\r"' >> /bin/setuptunnel.sh
+echo 'send "exit\r"' >> /bin/setuptunnel.sh
+echo 'expect eof' >> /bin/setuptunnel.sh
+echo 'set timeout 5' >> /bin/setuptunnel.sh
+echo "spawn ssh -o StrictHostKeyChecking=no -p $isport debian@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
+echo 'expect "password:"' >> /bin/setuptunnel.sh
+echo "send \"$(echo "$ispasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+echo 'expect "$"' >> /bin/setuptunnel.sh
+echo 'send "re\r"' >> /bin/setuptunnel.sh
+echo 'send "exit\r"' >> /bin/setuptunnel.sh
+echo 'expect eof' >> /bin/setuptunnel.sh
+chmod -v +x /bin/setuptunnel.sh
+setuptunnel.sh
+sleep 1s
+rm /bin/setuptunnel.sh
+rm /bin/installtunnel.sh
 
 port=$(grep -oE 'Port [0-9]+' /etc/ssh/sshd_config | cut -d' ' -f2)
 mkdir /root/iptables_rules
