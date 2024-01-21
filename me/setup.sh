@@ -250,8 +250,8 @@ echo 'expect eof' >> /bin/setuptunnel.sh
 chmod -v +x /bin/setuptunnel.sh
 setuptunnel.sh
 sleep 1s
-rm /bin/setuptunnel.sh
-rm /bin/installtunnel.sh
+#rm /bin/setuptunnel.sh
+#rm /bin/installtunnel.sh
 
 port=$(grep -oE 'Port [0-9]+' /etc/ssh/sshd_config | cut -d' ' -f2)
 mkdir /root/iptables_rules
