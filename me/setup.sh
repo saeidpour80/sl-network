@@ -133,6 +133,33 @@ sleep 1s
 rm /bin/getbackup.sh
 
 echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+echo '#!/usr/bin/expect' >> /bin/setupxui.sh
+echo '' >> /bin/setupxui.sh
+echo 'spawn x-ui' >> /bin/setupxui.sh
+echo 'expect "Please enter your selection"' >> /bin/setupxui.sh
+echo 'send "18\r"' >> /bin/setupxui.sh
+echo 'expect "Choose an option"' >> /bin/setupxui.sh
+echo 'send "1\r"' >> /bin/setupxui.sh
+echo 'expect "Proceed with installation of Fail2ban & IP Limit?"' >> /bin/setupxui.sh
+echo 'send "y\r"' >> /bin/setupxui.sh
+echo 'expect "Press enter to return to the main menu"' >> /bin/setupxui.sh
+echo 'send "\r"' >> /bin/setupxui.sh
+echo 'expect "Please enter your selection"' >> /bin/setupxui.sh
+echo 'send "18\r"' >> /bin/setupxui.sh
+echo 'expect "Choose an option"' >> /bin/setupxui.sh
+echo 'send "2\r"' >> /bin/setupxui.sh
+echo 'expect "Please enter new Ban Duration in Minutes"' >> /bin/setupxui.sh
+echo 'send "15\r"' >> /bin/setupxui.sh
+echo 'expect "Choose an option"' >> /bin/setupxui.sh
+echo 'send "0\r"' >> /bin/setupxui.sh
+echo 'expect "Please enter your selection"' >> /bin/setupxui.sh
+echo 'send "0\r"' >> /bin/setupxui.sh
+echo 'expect eof' >> /bin/setupxui.sh
+chmod -v +x /bin/setupxui.sh
+setupxui.sh
+sleep 1s
+rm /bin/setupxui.sh
+
 bash <(curl -fsSL https://raw.githubusercontent.com/radkesvat/ReverseTlsTunnel/master/scripts/RtTunnel.sh)
 
 port=$(grep -oE 'Port [0-9]+' /etc/ssh/sshd_config | cut -d' ' -f2)
@@ -151,11 +178,9 @@ echo 'iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT' >> /root
 echo 'iptables -I INPUT 1 -i lo -j ACCEPT' >> /root/iptables_rules/apply.sh
 echo 'iptables -A INPUT -j DROP' >> /root/iptables_rules/apply.sh
 chmod -v +x /root/iptables_rules/apply.sh
-sleep 2s
-/root/iptables_rules/apply.sh
-sleep 2s
 /root/iptables_rules/apply.sh
 
 sleep 5s
 
-reboot
+systemctl restart sshd
+systemctl restart ssh
