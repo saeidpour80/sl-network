@@ -273,5 +273,5 @@ chmod -v +x /root/iptables_rules/apply.sh
 
 sleep 5s
 
-systemctl restart sshd
-systemctl restart ssh
+#systemctl restart sshd
+#systemctl restart ssh
