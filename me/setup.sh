@@ -290,6 +290,8 @@ echo 'iptables -A INPUT -j DROP' >> /root/iptables_rules/apply.sh
 chmod -v +x /root/iptables_rules/apply.sh
 /root/iptables_rules/apply.sh
 
+clne.sh
+
 sleep 5s
 
 systemctl restart sshd
