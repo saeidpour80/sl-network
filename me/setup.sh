@@ -232,7 +232,7 @@ echo 'expect "Please Enter Password"' >> /bin/setuptunnel.sh
 echo "send \"$(echo "$istpasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
 echo 'expect eof' >> /bin/setuptunnel.sh
 echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$(echo "$fsip" | base64 --decode)" >> /bin/setuptunnel.sh
+echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$fsip" >> /bin/setuptunnel.sh
 echo 'expect "password:"' >> /bin/setuptunnel.sh
 echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
 echo 'expect "#"' >> /bin/setuptunnel.sh
