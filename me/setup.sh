@@ -95,7 +95,7 @@ then
 else
     fspasse=$(echo  "$fspass" | base64)
 fi
-printf "Iran server IP : "
+printf "\nIran server IP : "
 read isip
 while [[ !( -z "$isip" ) ]] && [[ !("$isip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
 do
@@ -122,15 +122,15 @@ then
     isport="22"
 fi
 printf "Iran server password : "
-read ispass
+read -s ispass
 if [[ -z "$ispass" ]]
 then
     ispasse="JEA3MDgyNDQwU2EK"
 else
     ispasse=$(echo  "$ispass" | base64)
 fi
-printf "Iran server tunnel password : "
-read istpass
+printf "\nIran server tunnel password : "
+read -s istpass
 if [[ -z "$istpass" ]]
 then
     istpasse="JEA3MDgyNDQwU2EK"
@@ -232,7 +232,7 @@ echo 'expect "Please Enter Password"' >> /bin/setuptunnel.sh
 echo "send \"$(echo "$istpasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
 echo 'expect eof' >> /bin/setuptunnel.sh
 echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$(echo "$fsipe" | base64 --decode)" >> /bin/setuptunnel.sh
+echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$(echo "$fsip" | base64 --decode)" >> /bin/setuptunnel.sh
 echo 'expect "password:"' >> /bin/setuptunnel.sh
 echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
 echo 'expect "#"' >> /bin/setuptunnel.sh
