@@ -258,16 +258,35 @@ mkdir /root/iptables_rules
 iptables-save > /root/iptables_rules/iptables-backup.txt
 apt install iptables ipset -y
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/root/firewall.txt -O /root/iptables_rules/firewall.txt
+#-------------------------------------------------------------------------------------------------------------#
+#-------------------------------------------------------------------------------------------------------------#
+# echo '#!/bin/bash' >> /root/iptables_rules/apply.sh
+# echo '' >> /root/iptables_rules/apply.sh
+# echo 'iptables -F' >> /root/iptables_rules/apply.sh
+# echo "iptables -A INPUT -p tcp --dport $port -j ACCEPT" >> /root/iptables_rules/apply.sh
+# echo 'ipset create whitelist hash:net' >> /root/iptables_rules/apply.sh
+# echo 'while read line; do ipset add whitelist $line; done < /root/iptables_rules/firewall.txt' >> /root/iptables_rules/apply.sh
+# echo 'iptables -A INPUT -m set --match-set whitelist src -j ACCEPT' >> /root/iptables_rules/apply.sh
+# echo 'iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT' >> /root/iptables_rules/apply.sh
+# echo 'iptables -I INPUT 1 -i lo -j ACCEPT' >> /root/iptables_rules/apply.sh
+# echo 'iptables -A INPUT -j DROP' >> /root/iptables_rules/apply.sh
+#-------------------------------------------------------------------------------------------------------------#
+#-------------------------------------------------------------------------------------------------------------#
 echo '#!/bin/bash' >> /root/iptables_rules/apply.sh
 echo '' >> /root/iptables_rules/apply.sh
 echo 'iptables -F' >> /root/iptables_rules/apply.sh
-echo "iptables -A INPUT -p tcp --dport $port -j ACCEPT" >> /root/iptables_rules/apply.sh
 echo 'ipset create whitelist hash:net' >> /root/iptables_rules/apply.sh
 echo 'while read line; do ipset add whitelist $line; done < /root/iptables_rules/firewall.txt' >> /root/iptables_rules/apply.sh
+echo 'iptables -A INPUT -p tcp --dport 22 -m set --match-set whitelist src -j ACCEPT' >> /root/iptables_rules/apply.sh
+echo "iptables -A INPUT -p tcp --dport $port -m set --match-set whitelist src -j ACCEPT" >> /root/iptables_rules/apply.sh
+echo 'iptables -A INPUT -p tcp -m set --match-set whitelist src -j ACCEPT' >> /root/iptables_rules/apply.sh
 echo 'iptables -A INPUT -m set --match-set whitelist src -j ACCEPT' >> /root/iptables_rules/apply.sh
+echo 'iptables -A OUTPUT -m set --match-set whitelist src -j DROP' >> /root/iptables_rules/apply.sh
 echo 'iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT' >> /root/iptables_rules/apply.sh
 echo 'iptables -I INPUT 1 -i lo -j ACCEPT' >> /root/iptables_rules/apply.sh
 echo 'iptables -A INPUT -j DROP' >> /root/iptables_rules/apply.sh
+#-------------------------------------------------------------------------------------------------------------#
+#-------------------------------------------------------------------------------------------------------------#
 chmod -v +x /root/iptables_rules/apply.sh
 /root/iptables_rules/apply.sh
 
