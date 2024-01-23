@@ -1,5 +1,7 @@
 #! /bin/bash
 
+sleep 1s
+
 # Check if the service is installed
 if sudo systemctl is-enabled --quiet tunnel.service; then
     # Service is installed, stop it
@@ -13,8 +15,6 @@ if sudo systemctl is-enabled --quiet tunnel.service; then
 else
     echo "Multiport Tunnel is not installed."
 fi
-
-sleep 1s
 
 # Check if the service is installed
 if sudo systemctl is-enabled --quiet tunnel.service; then
