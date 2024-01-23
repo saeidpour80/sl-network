@@ -45,7 +45,7 @@ do
         read -ra gname <<< "$getname"
         c=$(ps -u "${ousort[$i]}" | grep sshd | wc -l)
         ca=$(($ca + $c))
-        printf '%03d | %-26s---------> %-32s (%03d)\n' "$(($j + 1))" "${ousort[$i]}" "${gname[4]}" "$c"
+        printf '%03d | %-26s---------> %-32s  (%d)\n' "$(($j + 1))" "${ousort[$i]}" "${gname[4]}" "$c"
         j=$(($j + 1))
     fi
     i=$(($i + 1))
