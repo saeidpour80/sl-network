@@ -34,6 +34,8 @@ IFS=' '
 read -ra ousort <<< "$ous"
 
 i=0
+j=0
+ca=0
 while [[ $i -lt ${#ousort[@]} ]]
 do
     if [[ "${ousort[$i]}" != "root" ]]
@@ -41,10 +43,15 @@ do
         getname=$(getent passwd "${ousort[$i]}")
         IFS=':'
         read -ra gname <<< "$getname"
-        printf '%-26s---------> %s\n' "${ousort[$i]}" "${gname[4]}"
+        c=$(ps -u "${ousort[$i]}" | grep sshd | wc -l)
+        ca=$(($ca + $c))
+        printf '%03d | %-26s---------> %-32s (%03d)\n' "$(($j + 1))" "${ousort[$i]}" "${gname[4]}" "$c"
+        j=$(($j + 1))
     fi
     i=$(($i + 1))
 done
+echo "---------------------------------------------------------------------------------"
+printf '                                                                            (%03d)\n' "$ca"
 
 sleep 5s
 
