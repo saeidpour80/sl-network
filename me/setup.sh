@@ -59,7 +59,9 @@ chmod -v +x /bin/re
 crontab -l > mycron
 echo "0,15,30,45 * * * * re" >> mycron
 echo "0,30 * * * * getping.sh" >> mycron
-echo "0 0 * * * btt.sh; keu.sh; rm -f /bin/re.txt" >> mycron
+echo "0 0 * * * btt.sh" >> mycron
+echo "0 0 * * * keu.sh" >> mycron
+echo "0 0 * * * rm -f /bin/re.txt" >> mycron
 crontab mycron
 rm mycron
 
