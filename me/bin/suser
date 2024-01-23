@@ -18,6 +18,8 @@ Purple='\033[0;35m'       # Purple
 Cyan='\033[0;36m'         # Cyan
 White='\033[0;37m'        # White
 
+tablecolor=$Cyan
+
 allusers=$(cut -d: -f1,3 /etc/passwd | egrep ':[0-9]{4}$' | cut -d: -f1 | awk 'p; /videocall/{p=1}')
 
 allusers=$(echo "$allusers" | xargs)
@@ -35,9 +37,9 @@ then
     echo "e ----> Expiration Date : Expired"
     echo "all --> Expiration Date : Everything"
 else
-    echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
-    echo -e "${White}|${Color_Off}${Cyan}           Username           ${Color_Off}${White}|${Color_Off}${Cyan}            Full Name            ${Color_Off}${White}|${Color_Off}${Cyan} Limit ${Color_Off}${White}|${Color_Off}${Cyan}    Expiration Date    ${Color_Off}${White}|${Color_Off}${Cyan}  Status  ${Color_Off}${White}|${Color_Off}${Cyan}                  Activity                  ${Color_Off}${White}|${Color_Off}"
-    echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+    echo -e "${tablecolor}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+    echo -e "${tablecolor}|${Color_Off}${Purple}           Username           ${Color_Off}${tablecolor}|${Color_Off}${Purple}            Full Name            ${Color_Off}${tablecolor}|${Color_Off}${Purple} Limit ${Color_Off}${tablecolor}|${Color_Off}${Purple}    Expiration Date    ${Color_Off}${tablecolor}|${Color_Off}${Purple}  Status  ${Color_Off}${tablecolor}|${Color_Off}${Purple}                  Activity                  ${Color_Off}${tablecolor}|${Color_Off}"
+    echo -e "${tablecolor}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
     for user in "${au[@]}"
     do
         getname=$(getent passwd "$user")
@@ -99,56 +101,56 @@ else
         then
             if [[ "$accountexpires" == "Never" && $math -eq 999999 ]]
             then
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${White}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
-                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${White}%-20s  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${tablecolor}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
             fi
         elif [[ "$1" == "fn" ]]
         then
             if [[ "$accountexpires" != "Never" && $math -gt 432000 ]]
             then
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${White}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
-                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${White}%-20s  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${tablecolor}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
             fi
         elif [[ "$1" == "ne" ]]
         then
             if [[ $math -le 432000 && $math -gt 86400 ]]
             then
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Yellow}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
-                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${Yellow}%-20s  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${tablecolor}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
             elif [[ $math -le 86400 && $math -gt 0 ]]
             then
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
-                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${Red}%-20s  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${tablecolor}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
             fi
         elif [[ "$1" == "te" ]]
         then
             if [[ $math -le 86400 && $math -gt 0 ]]
             then
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
-                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${Red}%-20s  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${tablecolor}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
             fi
         elif [[ "$1" == "e" ]]
         then
             if [[ $math -le 0 ]]
             then
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-10s (Expired)  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
-                echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${Red}%-10s (Expired)  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                echo -e "${tablecolor}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
             fi
         elif [[ "$1" == "all" ]]
         then
             if [[ $math -gt 432000 ]]
             then
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${White}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${White}%-20s  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
             elif [[ $math -le 432000 && $math -gt 86400 ]]
             then
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Yellow}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${Yellow}%-20s  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
             elif [[ $math -le 86400 && $math -gt 0 ]]
             then
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-20s  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${Red}%-20s  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
             else
-                printf "${White}| %-29s| %-32s| %-6s|${Color_Off} ${Red}%-10s (Expired)  ${Color_Off}${White}|${Color_Off}${scolor} %-9s${Color_Off}${White}| %-43s|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
+                printf "${tablecolor}|${Color_Off}${White} %-29s${Color_Off}${tablecolor}|${Color_Off}${White} %-32s${Color_Off}${tablecolor}|${Color_Off}${White} %-6s${Color_Off}${tablecolor}|${Color_Off} ${Red}%-10s (Expired)  ${Color_Off}${tablecolor}|${Color_Off}${scolor} %-9s${Color_Off}${tablecolor}|${Color_Off}${White} %-43s${Color_Off}${tablecolor}|${Color_Off}\n" "$user" "${gname[4]}" "$limit" "$accountexpires" "$status" "$activity"
             fi
-            echo -e "${White}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
+            echo -e "${tablecolor}----------------------------------------------------------------------------------------------------------------------------------------------------------${Color_Off}"
         fi
     done
 fi
