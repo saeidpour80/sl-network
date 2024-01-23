@@ -1,6 +1,7 @@
 #! /bin/bash
 
 timedatectl set-timezone Asia/Tehran
+sleep 2s
 apt update -y
 apt upgrade -y
 apt install curl -y
