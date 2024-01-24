@@ -66,121 +66,151 @@ sudo service cron restart
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/etc/sshd_config -O /etc/ssh/sshd_config
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/etc/ssh_config -O /etc/ssh/ssh_config
 
-clear
-
-printf "Foreign server IP : "
-read fsip
-while [[ -z "$fsip" ]] || [[ !("$fsip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
+check=0
+while [[ $check -eq 0 ]]
 do
-    echo "Invalid value, Try again"
+    clear
     printf "Foreign server IP : "
     read fsip
-done
-printf "Foreign server Port : "
-read fsport
-while [[ !( -z "$fsport" ) ]] && [[ !("$fsport" =~ ^[0-9]+$) ]]
-do
-    echo "Invalid value, Try again"
-    printf "Foreign server port : "
+    while [[ -z "$fsip" ]] || [[ !("$fsip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
+    do
+        echo "Invalid value, Try again"
+        printf "Foreign server IP : "
+        read fsip
+    done
+    printf "Foreign server Port : "
     read fsport
-done
-if [[ -z "$fsport" ]]
-then
-    fsport="6406"
-fi
-printf "Foreign server password : "
-read -s fspass
-if [[ -z "$fspass" ]]
-then
-    fspasse="YjBxZCo4eXchI0BoIUI1Nk9AZEFHaGxlcwo="
-else
-    fspasse=$(echo  "$fspass" | base64)
-fi
-printf "\nIran server IP : "
-read isip
-while [[ !( -z "$isip" ) ]] && [[ !("$isip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
-do
-    echo "Invalid value, Try again"
-    printf "Iran server IP : "
+    while [[ !( -z "$fsport" ) ]] && [[ !("$fsport" =~ ^[0-9]+$) ]]
+    do
+        echo "Invalid value, Try again"
+        printf "Foreign server port : "
+        read fsport
+    done
+    if [[ -z "$fsport" ]]
+    then
+        fsport="6406"
+    fi
+    printf "Foreign server password : "
+    read -s fspass
+    if [[ -z "$fspass" ]]
+    then
+        fspasse="YjBxZCo4eXchI0BoIUI1Nk9AZEFHaGxlcwo="
+    else
+        fspasse=$(echo  "$fspass" | base64)
+    fi
+    printf "\nIran server IP : "
     read isip
-done
-if [[ -z "$isip" ]]
-then
-    isipe="MzcuMzIuMTMuMjcK"
-else
-    isipe=$(echo  "$isip" | base64)
-fi
-printf "Iran server port : "
-read isport
-while [[ !( -z "$isport" ) ]] && [[ !("$isport" =~ ^[0-9]+$) ]]
-do
-    echo "Invalid value, Try again"
+    while [[ !( -z "$isip" ) ]] && [[ !("$isip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
+    do
+        echo "Invalid value, Try again"
+        printf "Iran server IP : "
+        read isip
+    done
+    if [[ -z "$isip" ]]
+    then
+        isipe="MzcuMzIuMTMuMjcK"
+    else
+        isipe=$(echo  "$isip" | base64)
+    fi
     printf "Iran server port : "
     read isport
+    while [[ !( -z "$isport" ) ]] && [[ !("$isport" =~ ^[0-9]+$) ]]
+    do
+        echo "Invalid value, Try again"
+        printf "Iran server port : "
+        read isport
+    done
+    if [[ -z "$isport" ]]
+    then
+        isport="22"
+    fi
+    printf "Iran server password : "
+    read -s ispass
+    if [[ -z "$ispass" ]]
+    then
+        ispasse="JEA3MDgyNDQwU2EK"
+    else
+        ispasse=$(echo  "$ispass" | base64)
+    fi
+    printf "\nIran server tunnel password : "
+    read -s istpass
+    if [[ -z "$istpass" ]]
+    then
+        istpasse="JEA3MDgyNDQwU2EK"
+    else
+        istpasse=$(echo  "$istpass" | base64)
+    fi
+
+    echo ""
+
+    mkdir /root/restore
+    echo '#!/usr/bin/expect' >> /bin/getbackup.sh
+    echo '' >> /bin/getbackup.sh
+    echo 'set timeout 60' >> /bin/getbackup.sh
+    echo "spawn scp -o StrictHostKeyChecking=no -P $fsport root@$fsip:/etc/useractivityhistory.txt /root/restore/" >> /bin/getbackup.sh
+    echo 'expect "password:"' >> /bin/getbackup.sh
+    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
+    echo 'expect eof' >> /bin/getbackup.sh
+    echo "spawn scp -P $fsport root@$fsip:/etc/passwd /root/restore/" >> /bin/getbackup.sh
+    echo 'expect "password:"' >> /bin/getbackup.sh
+    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
+    echo 'expect eof' >> /bin/getbackup.sh
+    echo '' >> /bin/getbackup.sh
+    echo "spawn scp -P $fsport root@$fsip:/etc/group /root/restore/" >> /bin/getbackup.sh
+    echo 'expect "password:"' >> /bin/getbackup.sh
+    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
+    echo 'expect eof' >> /bin/getbackup.sh
+    echo '' >> /bin/getbackup.sh
+    echo "spawn scp -P $fsport root@$fsip:/etc/shadow /root/restore/" >> /bin/getbackup.sh
+    echo 'expect "password:"' >> /bin/getbackup.sh
+    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
+    echo 'expect eof' >> /bin/getbackup.sh
+    echo '' >> /bin/getbackup.sh
+    echo "spawn scp -P $fsport root@$fsip:/etc/gshadow /root/restore/" >> /bin/getbackup.sh
+    echo 'expect "password:"' >> /bin/getbackup.sh
+    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
+    echo 'expect eof' >> /bin/getbackup.sh
+    echo '' >> /bin/getbackup.sh
+    echo "spawn scp -r -P $fsport root@$fsip:/etc/letsencrypt /root/restore/" >> /bin/getbackup.sh
+    echo 'expect "password:"' >> /bin/getbackup.sh
+    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
+    echo 'expect eof' >> /bin/getbackup.sh
+    echo '' >> /bin/getbackup.sh
+    echo "spawn scp -r -P $fsport root@$fsip:/etc/x-ui /root/restore/" >> /bin/getbackup.sh
+    echo 'expect "password:"' >> /bin/getbackup.sh
+    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
+    echo 'expect eof' >> /bin/getbackup.sh
+    chmod -v +x /bin/getbackup.sh
+    getbackup.sh 
+    sleep 1s
+    rm /bin/getbackup.sh
+    if [[ -f /root/restore/useractivityhistory.txt ]] && [[ -f /root/restore/passwd ]] && [[ -f /root/restore/group ]] && [[ -f /root/restore/shadow ]] && [[ -f /root/restore/gshadow ]] && [[ -d /root/restore/letsencrypt ]] && [[ -d /root/restore/x-ui ]]
+    then
+        copy_status=0
+        yes | cp -rf /root/restore/useractivityhistory.txt /etc/
+        copy_status=$(($copy_status + $?))
+        yes | cp -rf /root/restore/passwd /etc/
+        copy_status=$(($copy_status + $?))
+        yes | cp -rf /root/restore/group /etc/
+        copy_status=$(($copy_status + $?))
+        yes | cp -rf /root/restore/shadow /etc/
+        copy_status=$(($copy_status + $?))
+        yes | cp -rf /root/restore/gshadow /etc/
+        copy_status=$(($copy_status + $?))
+        yes | cp -rf /root/restore/letsencrypt /etc/
+        copy_status=$(($copy_status + $?))
+        yes | cp -rf /root/restore/x-ui /etc/
+        copy_status=$(($copy_status + $?))
+        sleep 1s
+        rm -rf /root/restore
+        if [[ $copy_status -eq 0 ]]
+        then
+            check=1
+        else
+            check=0
+        fi
+    fi
 done
-if [[ -z "$isport" ]]
-then
-    isport="22"
-fi
-printf "Iran server password : "
-read -s ispass
-if [[ -z "$ispass" ]]
-then
-    ispasse="JEA3MDgyNDQwU2EK"
-else
-    ispasse=$(echo  "$ispass" | base64)
-fi
-printf "\nIran server tunnel password : "
-read -s istpass
-if [[ -z "$istpass" ]]
-then
-    istpasse="JEA3MDgyNDQwU2EK"
-else
-    istpasse=$(echo  "$istpass" | base64)
-fi
-
-echo ""
-
-echo '#!/usr/bin/expect' >> /bin/getbackup.sh
-echo '' >> /bin/getbackup.sh
-echo 'set timeout 60' >> /bin/getbackup.sh
-echo "spawn scp -o StrictHostKeyChecking=no -P $fsport root@$fsip:/etc/useractivityhistory.txt /etc/" >> /bin/getbackup.sh
-echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
-echo 'expect eof' >> /bin/getbackup.sh
-echo "spawn scp -P $fsport root@$fsip:/etc/passwd /etc/" >> /bin/getbackup.sh
-echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
-echo 'expect eof' >> /bin/getbackup.sh
-echo '' >> /bin/getbackup.sh
-echo "spawn scp -P $fsport root@$fsip:/etc/group /etc/" >> /bin/getbackup.sh
-echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
-echo 'expect eof' >> /bin/getbackup.sh
-echo '' >> /bin/getbackup.sh
-echo "spawn scp -P $fsport root@$fsip:/etc/shadow /etc/" >> /bin/getbackup.sh
-echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
-echo 'expect eof' >> /bin/getbackup.sh
-echo '' >> /bin/getbackup.sh
-echo "spawn scp -P $fsport root@$fsip:/etc/gshadow /etc/" >> /bin/getbackup.sh
-echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
-echo 'expect eof' >> /bin/getbackup.sh
-echo '' >> /bin/getbackup.sh
-echo "spawn scp -r -P $fsport root@$fsip:/etc/letsencrypt /etc/" >> /bin/getbackup.sh
-echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
-echo 'expect eof' >> /bin/getbackup.sh
-echo '' >> /bin/getbackup.sh
-echo "spawn scp -r -P $fsport root@$fsip:/etc/x-ui /etc/" >> /bin/getbackup.sh
-echo 'expect "password:"' >> /bin/getbackup.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
-echo 'expect eof' >> /bin/getbackup.sh
-chmod -v +x /bin/getbackup.sh
-getbackup.sh 
-sleep 1s
-rm /bin/getbackup.sh
 
 echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 echo '#!/usr/bin/expect' >> /bin/setupxui.sh
