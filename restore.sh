@@ -13,6 +13,7 @@ White='\033[0;37m'        # White
 timedatectl set-timezone Asia/Tehran
 NEEDRESTART_MODE=a apt update -y
 NEEDRESTART_MODE=a apt upgrade -y
+NEEDRESTART_MODE=a apt install curl -y
 NEEDRESTART_MODE=a apt install nano -y
 NEEDRESTART_MODE=a apt install expect -y
 
