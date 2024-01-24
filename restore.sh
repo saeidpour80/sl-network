@@ -11,10 +11,10 @@ Cyan='\033[0;36m'         # Cyan
 White='\033[0;37m'        # White
 
 timedatectl set-timezone Asia/Tehran
-apt update -y
-apt upgrade -y
-apt install nano -y
-apt install expect -y
+NEEDRESTART_MODE=a apt update -y
+NEEDRESTART_MODE=a apt upgrade -y
+NEEDRESTART_MODE=a apt install nano -y
+NEEDRESTART_MODE=a apt install expect -y
 
 echo "7555" | bash <(curl -Ls https://raw.githubusercontent.com/xpanel-cp/XPanel-SSH-User-Management/master/fix-call.sh --ipv4)
 
