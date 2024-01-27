@@ -171,7 +171,7 @@ then
         grep -v "^#userlimit
 account    required     pam_exec.so /etc/userlimit
 auth       required     pam_exec.so /etc/userlimit
-" /etc/pam.d/sshd > /tmp/ul && mv /tmp/ul /etc/pam.d/sshd
+\n" /etc/pam.d/sshd > /tmp/ul && mv /tmp/ul /etc/pam.d/sshd
         { rm /tmp/ul; } &> /dev/null
         echo -e "\n${Green}The script was successfully removed${Color_Off}\n"
         exit 1
