@@ -170,9 +170,10 @@ then
         { rm /etc/userlimit; } &> /dev/null
         grep -v "^#userlimit
 account    required     pam_exec.so /etc/userlimit
-auth       required     pam_exec.so /etc/userlimit" /etc/pam.d/sshd > /tmp/ul && mv /tmp/ul /etc/pam.d/sshd
-        { rm /tmp/ul; } &> /dev/null
+auth       required     pam_exec.so /etc/userlimit
+" /etc/pam.d/sshd > /tmp/ul && mv /tmp/ul /etc/pam.d/sshd
         sed -i '/#userlimit/d' /etc/pam.d/sshd
+        { rm /tmp/ul; } &> /dev/null
         echo -e "\n${Green}The script was successfully removed${Color_Off}\n"
         exit 1
     else
@@ -190,18 +191,14 @@ if  grep -Fxq "#userlimit" /etc/pam.d/sshd
 then
     :
 else
-    # sed -i '/@include common-password/d' /etc/pam.d/sshd
-    # sed -i '$d' /etc/pam.d/sshd
-    # echo -e '#userlimit' >> /etc/pam.d/sshd
-    # echo 'account    required     pam_exec.so /etc/userlimit' >> /etc/pam.d/sshd
-    # echo 'auth       required     pam_exec.so /etc/userlimit' >> /etc/pam.d/sshd
-    # echo '' >> /etc/pam.d/sshd
-    # echo '# Standard Un*x password updating.' >> /etc/pam.d/sshd
-    # echo '@include common-password' >> /etc/pam.d/sshd
-    sed -i '/@include common-password/i \\
-#userlimit \
-account    required     pam_exec.so /etc/userlimit \
-auth       required     pam_exec.so /etc/userlimit\n' /etc/pam.d/sshd
+    sed -i '/@include common-password/d' /etc/pam.d/sshd
+    sed -i '$d' /etc/pam.d/sshd
+    echo -e '#userlimit' >> /etc/pam.d/sshd
+    echo 'account    required     pam_exec.so /etc/userlimit' >> /etc/pam.d/sshd
+    echo 'auth       required     pam_exec.so /etc/userlimit' >> /etc/pam.d/sshd
+    echo '' >> /etc/pam.d/sshd
+    echo '# Standard Un*x password updating.' >> /etc/pam.d/sshd
+    echo '@include common-password' >> /etc/pam.d/sshd
 fi
 
 printf '\n'
