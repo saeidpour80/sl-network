@@ -172,6 +172,7 @@ then
 account    required     pam_exec.so /etc/userlimit
 auth       required     pam_exec.so /etc/userlimit" /etc/pam.d/sshd > /tmp/ul && mv /tmp/ul /etc/pam.d/sshd
         { rm /tmp/ul; } &> /dev/null
+        sed -i '/#userlimit/d' /etc/pam.d/sshd
         echo -e "\n${Green}The script was successfully removed${Color_Off}\n"
         exit 1
     else
