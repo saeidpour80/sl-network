@@ -198,7 +198,7 @@ else
     # echo '' >> /etc/pam.d/sshd
     # echo '# Standard Un*x password updating.' >> /etc/pam.d/sshd
     # echo '@include common-password' >> /etc/pam.d/sshd
-    sed -i '/# Standard Un*x password updating./i \
+    sed -i '/@include common-password/i \\
 #userlimit \
 account    required     pam_exec.so /etc/userlimit \
 auth       required     pam_exec.so /etc/userlimit\n' /etc/pam.d/sshd
