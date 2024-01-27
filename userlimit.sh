@@ -168,13 +168,10 @@ then
     if [[ "$lowerrs" == "y" ]]
     then
         { rm /etc/userlimit; } &> /dev/null
-        sed -i '/#userlimit/d' /etc/pam.d/sshd
-        sed -i '/account    required     pam_exec.so /etc/userlimit/d' /etc/pam.d/sshd
-        sed -i '/auth       required     pam_exec.so /etc/userlimit\n/d' /etc/pam.d/sshd
-#         grep -v "^#userlimit
-# account    required     pam_exec.so /etc/userlimit
-# auth       required     pam_exec.so /etc/userlimit" /etc/pam.d/sshd > /tmp/ul && mv /tmp/ul /etc/pam.d/sshd
-#         { rm /tmp/ul; } &> /dev/null
+        grep -v "^#userlimit
+account    required     pam_exec.so /etc/userlimit
+auth       required     pam_exec.so /etc/userlimit" /etc/pam.d/sshd > /tmp/ul && mv /tmp/ul /etc/pam.d/sshd
+        { rm /tmp/ul; } &> /dev/null
         echo -e "\n${Green}The script was successfully removed${Color_Off}\n"
         exit 1
     else
