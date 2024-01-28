@@ -1,5 +1,8 @@
 #! /bin/bash
 
+timedatectl set-timezone Asia/Tehran
+clear
+
 if command -v lsof > /dev/null 2>&1; then
     :
 else
