@@ -1,5 +1,6 @@
 #! /bin/bash
 
+timedatectl set-timezone Asia/Tehran
 clear
 
 Color_Off='\033[0m'       # Text Reset
