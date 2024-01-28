@@ -1,6 +1,7 @@
 #! /bin/bash
 
 timedatectl set-timezone Asia/Tehran
+NEEDRESTART_MODE=a apt install expect -y
 clear
 
 Color_Off='\033[0m'       # Text Reset
@@ -46,7 +47,6 @@ then
     NEEDRESTART_MODE=a apt upgrade -y
     NEEDRESTART_MODE=a apt install curl -y
     NEEDRESTART_MODE=a apt install nano -y
-    NEEDRESTART_MODE=a apt install expect -y
     echo "7555" | bash <(curl -Ls https://raw.githubusercontent.com/xpanel-cp/XPanel-SSH-User-Management/master/fix-call.sh --ipv4)
 fi
 if [[ $op -eq 1 ]] || [[ $op -eq 2 ]]
