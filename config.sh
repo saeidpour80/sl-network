@@ -1,5 +1,6 @@
 #! /bin/bash
 
+timedatectl set-timezone Asia/Tehran
 clear
 
 Color_Off='\033[0m'       # Text Reset
@@ -44,7 +45,6 @@ then
     sshport=22
 fi
 
-timedatectl set-timezone Asia/Tehran
 NEEDRESTART_MODE=a apt update -y
 NEEDRESTART_MODE=a apt upgrade -y
 NEEDRESTART_MODE=a apt install ufw -y
