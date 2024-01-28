@@ -51,28 +51,28 @@ then
 fi
 if [[ $op -eq 1 ]] || [[ $op -eq 2 ]]
 then
-    printf "IP : "
+    printf "\n${White}IP : ${Color_Off}"
     read fsip
     while [[ -z "$fsip" ]] || [[ !("$fsip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
     do
-        echo "Invalid value, Try again"
-        printf "IP : "
+        echo -e "\n${Red}Invalid value, Try again${Color_Off}"
+        printf "${White}IP : ${Color_Off}"
         read fsip
     done
-    printf "Port : "
+    printf "\n${White}Port : ${Color_Off}"
     read fsport
     while [[ -z "$fsport" ]] || [[ !("$fsport" =~ ^[0-9]+$) ]]
     do
-        echo "Invalid value, Try again"
-        printf "Port : "
+        echo -e "\n${Red}Invalid value, Try again${Color_Off}"
+        printf "${White}Port : ${Color_Off}"
         read fsport
     done
-    printf "Password : "
+    printf "\n${White}Password : ${Color_Off}"
     read fspass
     while [[ -z "$fspass" ]]
     do
-        echo "Invalid value, Try again"
-        printf "Password : "
+        echo -e "\n${Red}Invalid value, Try again${Color_Off}"
+        printf "${White}Password : ${Color_Off}"
         read fspass
     done
     echo ""
@@ -127,12 +127,12 @@ then
         sleep 1s
         rm -rf /root/restore
         echo -e "\n${Green}Successful${Color_Off}\n"
-        printf "Do you agree with rebooting the server ? (y/n): "
+        printf "${Cyan}Do you agree with rebooting the server ? (y/n): ${Color_Off}"
         read ra
         while [[ -z "$ra" ]] || [[ !("$ra" =~ ^[nNyY]+$) ]] || [[ ${#ra} -gt 1 ]]
         do
-            echo "Invalid value, Try again"
-            printf "Do you agree with rebooting the server ? (y/n): "
+            echo -e "\n${Red}Invalid value, Try again${Color_Off}"
+            printf "${Cyan}Do you agree with rebooting the server ? (y/n): ${Color_Off}"
             read ra
         done
         lowerrs=$(echo "$ra" | tr '[:upper:]' '[:lower:]')
