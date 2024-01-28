@@ -1,5 +1,6 @@
 #! /bin/bash
 
+timedatectl set-timezone Asia/Tehran
 clear
 
 Color_Off='\033[0m'       # Text Reset
@@ -99,7 +100,6 @@ then
         printf "${White}Number of connections per user : ${Color_Off}"
         read noc
     done
-    timedatectl set-timezone Asia/Tehran
     { rm /etc/userlimit; } &> /dev/null
     echo '#! /bin/bash' >> /etc/userlimit
     echo '' >> /etc/userlimit
