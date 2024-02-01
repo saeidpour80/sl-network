@@ -241,48 +241,48 @@ setupxui.sh
 sleep 1s
 rm /bin/setupxui.sh
 
-echo '#!/bin/bash' >> /bin/installtunnel.sh
-echo '' >> /bin/installtunnel.sh
-echo 'bash <(curl -fsSL https://raw.githubusercontent.com/radkesvat/ReverseTlsTunnel/master/scripts/RtTunnel.sh)' >> /bin/installtunnel.sh
-chmod -v +x /bin/installtunnel.sh
-echo '#!/usr/bin/expect' >> /bin/setuptunnel.sh
-echo '' >> /bin/setuptunnel.sh
-echo 'set timeout 60' >> /bin/setuptunnel.sh
-echo 'spawn installtunnel.sh' >> /bin/setuptunnel.sh
-echo 'expect "Please choose"' >> /bin/setuptunnel.sh
-echo 'send "1\r"' >> /bin/setuptunnel.sh
-echo 'expect "Do you want to install the Latest version?"' >> /bin/setuptunnel.sh
-echo 'send "yes\r"' >> /bin/setuptunnel.sh
-echo 'expect "Which server do you want to use?"' >> /bin/setuptunnel.sh
-echo 'send "2\r"' >> /bin/setuptunnel.sh
-echo 'expect "Please Enter SNI"' >> /bin/setuptunnel.sh
-echo 'send "\r"' >> /bin/setuptunnel.sh
-echo 'expect "Please Enter IRAN IP"' >> /bin/setuptunnel.sh
-echo "send \"$(echo "$isipe" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect "Please Enter Password"' >> /bin/setuptunnel.sh
-echo "send \"$(echo "$istpasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect eof' >> /bin/setuptunnel.sh
-echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$fsip" >> /bin/setuptunnel.sh
-echo 'expect "password:"' >> /bin/setuptunnel.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect "#"' >> /bin/setuptunnel.sh
-echo 'send "shutdown -h now\r"' >> /bin/setuptunnel.sh
-echo 'send "exit\r"' >> /bin/setuptunnel.sh
-echo 'expect eof' >> /bin/setuptunnel.sh
-echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $isport debian@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
-echo 'expect "password:"' >> /bin/setuptunnel.sh
-echo "send \"$(echo "$ispasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect "$"' >> /bin/setuptunnel.sh
-echo 'send "re\r"' >> /bin/setuptunnel.sh
-echo 'send "exit\r"' >> /bin/setuptunnel.sh
-echo 'expect eof' >> /bin/setuptunnel.sh
-chmod -v +x /bin/setuptunnel.sh
-setuptunnel.sh
-sleep 1s
-rm /bin/setuptunnel.sh
-rm /bin/installtunnel.sh
+# echo '#!/bin/bash' >> /bin/installtunnel.sh
+# echo '' >> /bin/installtunnel.sh
+# echo 'bash <(curl -fsSL https://raw.githubusercontent.com/radkesvat/ReverseTlsTunnel/master/scripts/RtTunnel.sh)' >> /bin/installtunnel.sh
+# chmod -v +x /bin/installtunnel.sh
+# echo '#!/usr/bin/expect' >> /bin/setuptunnel.sh
+# echo '' >> /bin/setuptunnel.sh
+# echo 'set timeout 60' >> /bin/setuptunnel.sh
+# echo 'spawn installtunnel.sh' >> /bin/setuptunnel.sh
+# echo 'expect "Please choose"' >> /bin/setuptunnel.sh
+# echo 'send "1\r"' >> /bin/setuptunnel.sh
+# echo 'expect "Do you want to install the Latest version?"' >> /bin/setuptunnel.sh
+# echo 'send "yes\r"' >> /bin/setuptunnel.sh
+# echo 'expect "Which server do you want to use?"' >> /bin/setuptunnel.sh
+# echo 'send "2\r"' >> /bin/setuptunnel.sh
+# echo 'expect "Please Enter SNI"' >> /bin/setuptunnel.sh
+# echo 'send "\r"' >> /bin/setuptunnel.sh
+# echo 'expect "Please Enter IRAN IP"' >> /bin/setuptunnel.sh
+# echo "send \"$(echo "$isipe" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+# echo 'expect "Please Enter Password"' >> /bin/setuptunnel.sh
+# echo "send \"$(echo "$istpasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+# echo 'expect eof' >> /bin/setuptunnel.sh
+# echo 'set timeout 5' >> /bin/setuptunnel.sh
+# echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$fsip" >> /bin/setuptunnel.sh
+# echo 'expect "password:"' >> /bin/setuptunnel.sh
+# echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+# echo 'expect "#"' >> /bin/setuptunnel.sh
+# echo 'send "shutdown -h now\r"' >> /bin/setuptunnel.sh
+# echo 'send "exit\r"' >> /bin/setuptunnel.sh
+# echo 'expect eof' >> /bin/setuptunnel.sh
+# echo 'set timeout 5' >> /bin/setuptunnel.sh
+# echo "spawn ssh -o StrictHostKeyChecking=no -p $isport debian@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
+# echo 'expect "password:"' >> /bin/setuptunnel.sh
+# echo "send \"$(echo "$ispasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+# echo 'expect "$"' >> /bin/setuptunnel.sh
+# echo 'send "re\r"' >> /bin/setuptunnel.sh
+# echo 'send "exit\r"' >> /bin/setuptunnel.sh
+# echo 'expect eof' >> /bin/setuptunnel.sh
+# chmod -v +x /bin/setuptunnel.sh
+# setuptunnel.sh
+# sleep 1s
+# rm /bin/setuptunnel.sh
+# rm /bin/installtunnel.sh
 
 port=$(grep -oE 'Port [0-9]+' /etc/ssh/sshd_config | cut -d' ' -f2)
 mkdir /root/iptables_rules
