@@ -2,7 +2,7 @@
 
 ZONE_ID="0708fff580c96ee2a6a43f1c30dead34"
 CF_BEARER="YEP9EVr7_LrgYwyDSxDbYkmjYZyXKiRrmd0TK6V7"
-IP="37.32.13.27"
+IP="185.215.231.2"
 
 A_record="s1.sl-network.net"
 A_record_id="6b7b03d301a1200352de0b6f636f210e"
