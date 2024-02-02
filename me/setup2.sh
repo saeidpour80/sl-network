@@ -45,7 +45,7 @@ wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/sus
 chmod -v +x /bin/suser
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/btt.sh -O /bin/btt.sh
 chmod -v +x /bin/btt.sh
-wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/clir.sh -O /bin/clir.sh
+wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/clir2.sh -O /bin/clir.sh
 chmod -v +x /bin/clir.sh
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/clne.sh -O /bin/clne.sh
 chmod -v +x /bin/clne.sh
@@ -108,7 +108,7 @@ do
     done
     if [[ -z "$isip" ]]
     then
-        isipe="MzcuMzIuMTMuMjcK"
+        isipe="MTg1LjIxNS4yMzEuMgo="
     else
         isipe=$(echo  "$isip" | base64)
     fi
@@ -256,7 +256,7 @@ echo 'send "yes\r"' >> /bin/setuptunnel.sh
 echo 'expect "Which server do you want to use?"' >> /bin/setuptunnel.sh
 echo 'send "2\r"' >> /bin/setuptunnel.sh
 echo 'expect "Please Enter SNI"' >> /bin/setuptunnel.sh
-echo 'send "\r"' >> /bin/setuptunnel.sh
+echo 'send "digikala.com\r"' >> /bin/setuptunnel.sh
 echo 'expect "Please Enter IRAN IP"' >> /bin/setuptunnel.sh
 echo "send \"$(echo "$isipe" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
 echo 'expect "Please Enter Password"' >> /bin/setuptunnel.sh
