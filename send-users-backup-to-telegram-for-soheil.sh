@@ -3,7 +3,7 @@
 NEEDRESTART_MODE=a apt install cron -y
 systemctl enable cron
 
-echo '#!/usr/bin/expect' >> /bin/btt.sh
+echo '#!/bin/bash' >> /bin/btt.sh
 echo '' >> /bin/btt.sh
 echo 'DATE=$(date +"%Y-%m-%d %H:%M:%S")' >> /bin/btt.sh
 echo 'BOT_TOKEN="6622365488:AAG5LK5TDIy_laxghvYuuaPy37LonFyQnz0"' >> /bin/btt.sh
