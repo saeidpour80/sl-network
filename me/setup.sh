@@ -8,6 +8,7 @@ apt install sudo
 apt install cron -y
 systemctl enable cron
 apt install expect -y
+apt install nano -y
 
 echo "7555" | bash <(curl -Ls https://raw.githubusercontent.com/xpanel-cp/XPanel-SSH-User-Management/master/fix-call.sh --ipv4)
 
