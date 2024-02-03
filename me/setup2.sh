@@ -272,10 +272,10 @@ echo 'send "shutdown -h now\r"' >> /bin/setuptunnel.sh
 echo 'send "exit\r"' >> /bin/setuptunnel.sh
 echo 'expect eof' >> /bin/setuptunnel.sh
 echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $isport debian@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
+echo "spawn ssh -o StrictHostKeyChecking=no -p $isport root@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
 echo 'expect "password:"' >> /bin/setuptunnel.sh
 echo "send \"$(echo "$ispasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect "$"' >> /bin/setuptunnel.sh
+echo 'expect "#"' >> /bin/setuptunnel.sh
 echo 'send "re\r"' >> /bin/setuptunnel.sh
 echo 'send "exit\r"' >> /bin/setuptunnel.sh
 echo 'expect eof' >> /bin/setuptunnel.sh
