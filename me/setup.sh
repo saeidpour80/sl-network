@@ -46,7 +46,7 @@ wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/sus
 chmod -v +x /bin/suser
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/btt.sh -O /bin/btt.sh
 chmod -v +x /bin/btt.sh
-wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/clir.sh -O /bin/clir.sh
+wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/clir2.sh -O /bin/clir.sh
 chmod -v +x /bin/clir.sh
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/clne.sh -O /bin/clne.sh
 chmod -v +x /bin/clne.sh
@@ -109,7 +109,7 @@ do
     done
     if [[ -z "$isip" ]]
     then
-        isipe="MzcuMzIuMTMuMjcK"
+        isipe="MTg1LjIxNS4yMzEuMgo="
     else
         isipe=$(echo  "$isip" | base64)
     fi
@@ -272,10 +272,10 @@ echo 'send "shutdown -h now\r"' >> /bin/setuptunnel.sh
 echo 'send "exit\r"' >> /bin/setuptunnel.sh
 echo 'expect eof' >> /bin/setuptunnel.sh
 echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $isport debian@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
+echo "spawn ssh -o StrictHostKeyChecking=no -p $isport root@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
 echo 'expect "password:"' >> /bin/setuptunnel.sh
 echo "send \"$(echo "$ispasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect "$"' >> /bin/setuptunnel.sh
+echo 'expect "#"' >> /bin/setuptunnel.sh
 echo 'send "re\r"' >> /bin/setuptunnel.sh
 echo 'send "exit\r"' >> /bin/setuptunnel.sh
 echo 'expect eof' >> /bin/setuptunnel.sh
