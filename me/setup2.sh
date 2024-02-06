@@ -150,6 +150,21 @@ do
     fi
 done
 
+echo '#!/usr/bin/expect' >> /bin/setuptunnel.sh
+echo '' >> /bin/setuptunnel.sh
+echo 'set timeout 5' >> /bin/setuptunnel.sh
+echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$fsip" >> /bin/setuptunnel.sh
+echo 'expect "password:"' >> /bin/setuptunnel.sh
+echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+echo 'expect "#"' >> /bin/setuptunnel.sh
+echo 'send "shutdown -h now\r"' >> /bin/setuptunnel.sh
+echo 'send "exit\r"' >> /bin/setuptunnel.sh
+echo 'expect eof' >> /bin/setuptunnel.sh
+chmod -v +x /bin/setuptunnel.sh
+setuptunnel.sh
+sleep 1s
+rm /bin/setuptunnel.sh
+
 clne.sh
 
 sleep 5s
