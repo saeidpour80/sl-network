@@ -16,8 +16,6 @@ apt install nginx -y
 wget www.crazygames.com
 cp index.html /var/www/html/
 
-apt install certbot -y
-
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/etc/userlimit -O /etc/userlimit
 chmod -v +x /etc/userlimit
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/etc/userlogout -O /etc/userlogout
@@ -46,20 +44,15 @@ wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/sus
 chmod -v +x /bin/suser
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/btt.sh -O /bin/btt.sh
 chmod -v +x /bin/btt.sh
-wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/clir2.sh -O /bin/clir.sh
-chmod -v +x /bin/clir.sh
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/clne.sh -O /bin/clne.sh
 chmod -v +x /bin/clne.sh
-wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/getping.sh -O /bin/getping.sh
+wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/getping2.sh -O /bin/getping.sh
 chmod -v +x /bin/getping.sh
 wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/keu.sh -O /bin/keu.sh
 chmod -v +x /bin/keu.sh
-wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/bin/re -O /bin/re
-chmod -v +x /bin/re
 crontab -l > mycron
-echo "0,15,30,45 * * * * re" >> mycron
 echo "0,30 * * * * getping.sh" >> mycron
-echo "0 0 * * * btt.sh; keu.sh; rm -f /bin/re.txt" >> mycron
+echo "0 0 * * * btt.sh; keu.sh" >> mycron
 crontab mycron
 rm mycron
 sudo service cron restart
@@ -99,48 +92,6 @@ do
     else
         fspasse=$(echo  "$fspass" | base64)
     fi
-    printf "\nIran server IP : "
-    read isip
-    while [[ !( -z "$isip" ) ]] && [[ !("$isip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
-    do
-        echo "Invalid value, Try again"
-        printf "Iran server IP : "
-        read isip
-    done
-    if [[ -z "$isip" ]]
-    then
-        isipe="MTg1LjIxNS4yMzEuMgo="
-    else
-        isipe=$(echo  "$isip" | base64)
-    fi
-    printf "Iran server port : "
-    read isport
-    while [[ !( -z "$isport" ) ]] && [[ !("$isport" =~ ^[0-9]+$) ]]
-    do
-        echo "Invalid value, Try again"
-        printf "Iran server port : "
-        read isport
-    done
-    if [[ -z "$isport" ]]
-    then
-        isport="22"
-    fi
-    printf "Iran server password : "
-    read -s ispass
-    if [[ -z "$ispass" ]]
-    then
-        ispasse="JEA3MDgyNDQwU2EK"
-    else
-        ispasse=$(echo  "$ispass" | base64)
-    fi
-    printf "\nIran server tunnel password : "
-    read -s istpass
-    if [[ -z "$istpass" ]]
-    then
-        istpasse="JEA3MDgyNDQwU2EK"
-    else
-        istpasse=$(echo  "$istpass" | base64)
-    fi
 
     echo ""
 
@@ -171,21 +122,11 @@ do
     echo 'expect "password:"' >> /bin/getbackup.sh
     echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
     echo 'expect eof' >> /bin/getbackup.sh
-    echo '' >> /bin/getbackup.sh
-    echo "spawn scp -r -P $fsport root@$fsip:/etc/letsencrypt /root/restore/" >> /bin/getbackup.sh
-    echo 'expect "password:"' >> /bin/getbackup.sh
-    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
-    echo 'expect eof' >> /bin/getbackup.sh
-    echo '' >> /bin/getbackup.sh
-    echo "spawn scp -r -P $fsport root@$fsip:/etc/x-ui /root/restore/" >> /bin/getbackup.sh
-    echo 'expect "password:"' >> /bin/getbackup.sh
-    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/getbackup.sh
-    echo 'expect eof' >> /bin/getbackup.sh
     chmod -v +x /bin/getbackup.sh
     getbackup.sh 
     sleep 1s
     rm /bin/getbackup.sh
-    if [[ -f /root/restore/useractivityhistory.txt ]] && [[ -f /root/restore/passwd ]] && [[ -f /root/restore/group ]] && [[ -f /root/restore/shadow ]] && [[ -f /root/restore/gshadow ]] && [[ -d /root/restore/letsencrypt ]] && [[ -d /root/restore/x-ui ]]
+    if [[ -f /root/restore/useractivityhistory.txt ]] && [[ -f /root/restore/passwd ]] && [[ -f /root/restore/group ]] && [[ -f /root/restore/shadow ]] && [[ -f /root/restore/gshadow ]]
     then
         copy_status=0
         yes | cp -rf /root/restore/useractivityhistory.txt /etc/
@@ -198,10 +139,6 @@ do
         copy_status=$(($copy_status + $?))
         yes | cp -rf /root/restore/gshadow /etc/
         copy_status=$(($copy_status + $?))
-        yes | cp -rf /root/restore/letsencrypt /etc/
-        copy_status=$(($copy_status + $?))
-        yes | cp -rf /root/restore/x-ui /etc/
-        copy_status=$(($copy_status + $?))
         sleep 1s
         rm -rf /root/restore
         if [[ $copy_status -eq 0 ]]
@@ -212,115 +149,6 @@ do
         fi
     fi
 done
-
-echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
-echo '#!/usr/bin/expect' >> /bin/setupxui.sh
-echo '' >> /bin/setupxui.sh
-echo 'set timeout 60' >> /bin/setupxui.sh
-echo 'spawn x-ui' >> /bin/setupxui.sh
-echo 'expect "Please enter your selection"' >> /bin/setupxui.sh
-echo 'send "18\r"' >> /bin/setupxui.sh
-echo 'expect "Choose an option"' >> /bin/setupxui.sh
-echo 'send "1\r"' >> /bin/setupxui.sh
-echo 'expect "Proceed with installation of Fail2ban & IP Limit?"' >> /bin/setupxui.sh
-echo 'send "y\r"' >> /bin/setupxui.sh
-echo 'expect "Press enter to return to the main menu"' >> /bin/setupxui.sh
-echo 'send "\r"' >> /bin/setupxui.sh
-echo 'expect "Please enter your selection"' >> /bin/setupxui.sh
-echo 'send "18\r"' >> /bin/setupxui.sh
-echo 'expect "Choose an option"' >> /bin/setupxui.sh
-echo 'send "2\r"' >> /bin/setupxui.sh
-echo 'expect "Please enter new Ban Duration in Minutes"' >> /bin/setupxui.sh
-echo 'send "15\r"' >> /bin/setupxui.sh
-echo 'expect "Choose an option"' >> /bin/setupxui.sh
-echo 'send "0\r"' >> /bin/setupxui.sh
-echo 'expect "Please enter your selection"' >> /bin/setupxui.sh
-echo 'send "0\r"' >> /bin/setupxui.sh
-echo 'expect eof' >> /bin/setupxui.sh
-chmod -v +x /bin/setupxui.sh
-setupxui.sh
-sleep 1s
-rm /bin/setupxui.sh
-
-echo '#!/bin/bash' >> /bin/installtunnel.sh
-echo '' >> /bin/installtunnel.sh
-echo 'bash <(curl -fsSL https://raw.githubusercontent.com/radkesvat/ReverseTlsTunnel/master/scripts/RtTunnel.sh)' >> /bin/installtunnel.sh
-chmod -v +x /bin/installtunnel.sh
-echo '#!/usr/bin/expect' >> /bin/setuptunnel.sh
-echo '' >> /bin/setuptunnel.sh
-echo 'set timeout 60' >> /bin/setuptunnel.sh
-echo 'spawn installtunnel.sh' >> /bin/setuptunnel.sh
-echo 'expect "Please choose"' >> /bin/setuptunnel.sh
-echo 'send "1\r"' >> /bin/setuptunnel.sh
-echo 'expect "Do you want to install the Latest version?"' >> /bin/setuptunnel.sh
-echo 'send "yes\r"' >> /bin/setuptunnel.sh
-echo 'expect "Which server do you want to use?"' >> /bin/setuptunnel.sh
-echo 'send "2\r"' >> /bin/setuptunnel.sh
-echo 'expect "Please Enter SNI"' >> /bin/setuptunnel.sh
-echo 'send "digikala.com\r"' >> /bin/setuptunnel.sh
-echo 'expect "Please Enter IRAN IP"' >> /bin/setuptunnel.sh
-echo "send \"$(echo "$isipe" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect "Please Enter Password"' >> /bin/setuptunnel.sh
-echo "send \"$(echo "$istpasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect eof' >> /bin/setuptunnel.sh
-echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$fsip" >> /bin/setuptunnel.sh
-echo 'expect "password:"' >> /bin/setuptunnel.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect "#"' >> /bin/setuptunnel.sh
-echo 'send "shutdown -h now\r"' >> /bin/setuptunnel.sh
-echo 'send "exit\r"' >> /bin/setuptunnel.sh
-echo 'expect eof' >> /bin/setuptunnel.sh
-echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $isport root@$(echo "$isipe" | base64 --decode)" >> /bin/setuptunnel.sh
-echo 'expect "password:"' >> /bin/setuptunnel.sh
-echo "send \"$(echo "$ispasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect "#"' >> /bin/setuptunnel.sh
-echo 'send "re\r"' >> /bin/setuptunnel.sh
-echo 'send "exit\r"' >> /bin/setuptunnel.sh
-echo 'expect eof' >> /bin/setuptunnel.sh
-chmod -v +x /bin/setuptunnel.sh
-setuptunnel.sh
-sleep 1s
-rm /bin/setuptunnel.sh
-rm /bin/installtunnel.sh
-
-port=$(grep -oE 'Port [0-9]+' /etc/ssh/sshd_config | cut -d' ' -f2)
-mkdir /root/iptables_rules
-iptables-save > /root/iptables_rules/iptables-backup.txt
-apt install iptables ipset -y
-wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/root/firewall.txt -O /root/iptables_rules/firewall.txt
-#-------------------------------------------------------------------------------------------------------------#
-#-------------------------------------------------------------------------------------------------------------#
-# echo '#!/bin/bash' >> /root/iptables_rules/apply.sh
-# echo '' >> /root/iptables_rules/apply.sh
-# echo 'iptables -F' >> /root/iptables_rules/apply.sh
-# echo "iptables -A INPUT -p tcp --dport $port -j ACCEPT" >> /root/iptables_rules/apply.sh
-# echo 'ipset create whitelist hash:net' >> /root/iptables_rules/apply.sh
-# echo 'while read line; do ipset add whitelist $line; done < /root/iptables_rules/firewall.txt' >> /root/iptables_rules/apply.sh
-# echo 'iptables -A INPUT -m set --match-set whitelist src -j ACCEPT' >> /root/iptables_rules/apply.sh
-# echo 'iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT' >> /root/iptables_rules/apply.sh
-# echo 'iptables -I INPUT 1 -i lo -j ACCEPT' >> /root/iptables_rules/apply.sh
-# echo 'iptables -A INPUT -j DROP' >> /root/iptables_rules/apply.sh
-#-------------------------------------------------------------------------------------------------------------#
-#-------------------------------------------------------------------------------------------------------------#
-echo '#!/bin/bash' >> /root/iptables_rules/apply.sh
-echo '' >> /root/iptables_rules/apply.sh
-echo 'iptables -F' >> /root/iptables_rules/apply.sh
-echo 'ipset create whitelist hash:net' >> /root/iptables_rules/apply.sh
-echo 'while read line; do ipset add whitelist $line; done < /root/iptables_rules/firewall.txt' >> /root/iptables_rules/apply.sh
-echo 'iptables -A INPUT -p tcp --dport 22 -m set --match-set whitelist src -j ACCEPT' >> /root/iptables_rules/apply.sh
-echo "iptables -A INPUT -p tcp --dport $port -m set --match-set whitelist src -j ACCEPT" >> /root/iptables_rules/apply.sh
-echo 'iptables -A INPUT -p tcp -m set --match-set whitelist src -j ACCEPT' >> /root/iptables_rules/apply.sh
-echo 'iptables -A INPUT -m set --match-set whitelist src -j ACCEPT' >> /root/iptables_rules/apply.sh
-echo 'iptables -A OUTPUT -m set --match-set whitelist src -j DROP' >> /root/iptables_rules/apply.sh
-echo 'iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT' >> /root/iptables_rules/apply.sh
-echo 'iptables -I INPUT 1 -i lo -j ACCEPT' >> /root/iptables_rules/apply.sh
-echo 'iptables -A INPUT -j DROP' >> /root/iptables_rules/apply.sh
-#-------------------------------------------------------------------------------------------------------------#
-#-------------------------------------------------------------------------------------------------------------#
-chmod -v +x /root/iptables_rules/apply.sh
-/root/iptables_rules/apply.sh
 
 clne.sh
 
