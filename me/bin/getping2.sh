@@ -26,7 +26,7 @@ ir6_ping_check_results=$(echo "$results" | awk -F '"ir6.node.check-host.net":[][
 ir1=0
 ir3=0
 ir5=0
-ir7=0
+ir6=0
 
 IFS=',' read -ra ADDR <<< "$ir1_ping_check_results"
 
