@@ -81,7 +81,7 @@ then
     mkdir /etc/x-ui/
     wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/tunnel/ir.db -O /etc/x-ui/x-ui.db
     echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
-elif if [[ $op -eq 2 ]]
+elif [[ $op -eq 2 ]]
     printf "\n${White}Iran IPV4 : ${Color_Off}"
     read iripv4
     while [[ -z "$iripv4" ]] || [[ !("$iripv4" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
