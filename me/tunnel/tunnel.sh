@@ -3,7 +3,6 @@
 timedatectl set-timezone Asia/Tehran
 apt update -y
 apt upgrade -y
-apt install curl -y
 apt install sudo
 apt install iptables -y
 clear
