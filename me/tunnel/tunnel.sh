@@ -6,7 +6,6 @@ apt upgrade -y
 apt install curl -y
 apt install sudo
 apt install iptables -y
-apt install expect -y
 apt install nano -y
 clear
 
@@ -73,13 +72,13 @@ then
     then
         line_number=$(grep -n "#### START TUNNEL ####" /etc/rc.local)
         line_number=${line_number%:*}
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
         oldfile=$(cat /etc/rc.local)
         rm -f /etc/rc.local
         echo '#! /bin/bash' >> /etc/rc.local
@@ -144,13 +143,13 @@ then
     then
         line_number=$(grep -n "#### START TUNNEL ####" /etc/rc.local)
         line_number=${line_number%:*}
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
-        sed -i "$((line_number-1))d" /etc/pam.d/sshd
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
+        sed -i "$((line_number-1))d" /etc/rc.local
         oldfile=$(cat /etc/rc.local)
         rm -f /etc/rc.local
         echo '#! /bin/bash' >> /etc/rc.local
