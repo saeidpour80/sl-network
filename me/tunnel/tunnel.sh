@@ -103,18 +103,24 @@ then
     sudo ip link set dev parsabr down
     sudo ip link delete parsabr
     /etc/rc.local
-    printf "\n${Yellow}Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted)? (y/n): ${Color_Off}"
+    printf "\n${Yellow}Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted) ? (y/n) : ${Color_Off}"
     read installxui
     while [[ -z "$installxui" ]] || [[ !("$installxui" =~ ^[nNyY]+$) ]] || [[ ${#installxui} -gt 1 ]]
     do
         echo -e "\n${Red}Invalid value, Try again${Color_Off}"
-        printf "${Yellow}Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted)? (y/n): ${Color_Off}"
+        printf "${Yellow}Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted) ? (y/n) : ${Color_Off}"
         read installxui
     done
     lowermup=$(echo "$installxui" | tr '[:upper:]' '[:lower:]')
     if [[ "$lowermup" == "y" ]]
     then
-        mkdir /etc/x-ui/
+        if [[ -d /etc/x-ui ]]
+        then
+            filecreatetime=$(date "+%Y-%m-%d--%H-%M-%S")
+            yes | cp -rf /etc/x-ui/x-ui.db /etc/x-ui/x-ui-backup-$filecreatetime.db
+        else
+            mkdir /etc/x-ui/
+        fi
         wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/tunnel/ir.db -O /etc/x-ui/x-ui.db
         echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
     fi
@@ -174,7 +180,13 @@ then
     sudo ip link set dev parsabr down
     sudo ip link delete parsabr
     /etc/rc.local
-    mkdir /etc/x-ui/
+    if [[ -d /etc/x-ui ]]
+    then
+        filecreatetime=$(date "+%Y-%m-%d--%H-%M-%S")
+        yes | cp -rf /etc/x-ui/x-ui.db /etc/x-ui/x-ui-backup-$filecreatetime.db
+    else
+        mkdir /etc/x-ui/
+    fi
     wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/tunnel/kh.db -O /etc/x-ui/x-ui.db
     echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 fi
