@@ -6,7 +6,6 @@ apt upgrade -y
 apt install curl -y
 apt install sudo
 apt install iptables -y
-apt install nano -y
 clear
 
 Color_Off='\033[0m'       # Text Reset
@@ -105,12 +104,12 @@ then
     sudo ip link set dev parsabr down
     sudo ip link delete parsabr
     /etc/rc.local
-    printf "Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted)? (y/n): "
+    printf "\n${Yellow}Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted)? (y/n): ${Color_Off}"
     read installxui
     while [[ -z "$installxui" ]] || [[ !("$installxui" =~ ^[nNyY]+$) ]] || [[ ${#installxui} -gt 1 ]]
     do
-        echo "Invalid value, Try again"
-        printf "Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted)? (y/n): "
+        echo -e "\n${Red}Invalid value, Try again${Color_Off}"
+        printf "${Yellow}Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted)? (y/n): ${Color_Off}"
         read installxui
     done
     lowermup=$(echo "$installxui" | tr '[:upper:]' '[:lower:]')
