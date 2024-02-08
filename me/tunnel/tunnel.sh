@@ -69,20 +69,58 @@ then
         read loipv6
     done
     myip=$(hostname -I | awk '{print $1}')
-    oldfile=$(cat /etc/rc.local)
-    echo '#! /bin/bash' >> /etc/rc.local
-    echo "sudo ip tunnel add parsabr mode sit remote $khipv4 local $myip ttl 255" >> /etc/rc.local
-    echo 'sudo ip link set dev parsabr up' >> /etc/rc.local
-    echo "sudo ip addr add $loipv6::1/64 dev parsabr" >> /etc/rc.local
-    echo 'exit0' >> /etc/rc.local
-    echo "$oldfile" >> /etc/rc.local
+    if  grep -Fxq "#### START TUNNEL ####" /etc/rc.local
+    then
+        line_number=$(grep -n "#### START TUNNEL ####" /etc/rc.local)
+        line_number=${line_number%:*}
+        sed -i "$(($line_number-1))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        oldfile=$(cat /etc/rc.local)
+        rm -f /etc/rc.local
+        echo '#! /bin/bash' >> /etc/rc.local
+        echo '#### START TUNNEL ####' >> /etc/rc.local
+        echo "sudo ip tunnel add parsabr mode sit remote $khipv4 local $myip ttl 255" >> /etc/rc.local
+        echo 'sudo ip link set dev parsabr up' >> /etc/rc.local
+        echo "sudo ip addr add $loipv6::1/64 dev parsabr" >> /etc/rc.local
+        echo 'exit0' >> /etc/rc.local
+        echo '#### END TUNNEL ####' >> /etc/rc.local
+        echo "$oldfile" >> /etc/rc.local
+    else
+        oldfile=$(cat /etc/rc.local)
+        rm -f /etc/rc.local
+        echo '#! /bin/bash' >> /etc/rc.local
+        echo '#### START TUNNEL ####' >> /etc/rc.local
+        echo "sudo ip tunnel add parsabr mode sit remote $khipv4 local $myip ttl 255" >> /etc/rc.local
+        echo 'sudo ip link set dev parsabr up' >> /etc/rc.local
+        echo "sudo ip addr add $loipv6::1/64 dev parsabr" >> /etc/rc.local
+        echo 'exit0' >> /etc/rc.local
+        echo '#### END TUNNEL ####' >> /etc/rc.local
+        echo "$oldfile" >> /etc/rc.local
+    fi
     chmod +x /etc/rc.local
     sudo ip link set dev parsabr down
     sudo ip link delete parsabr
     /etc/rc.local
-    mkdir /etc/x-ui/
-    wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/tunnel/ir.db -O /etc/x-ui/x-ui.db
-    echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+    printf "Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted)? (y/n): "
+    read installxui
+    while [[ -z "$installxui" ]] || [[ !("$installxui" =~ ^[nNyY]+$) ]] || [[ ${#installxui} -gt 1 ]]
+    do
+        echo "Invalid value, Try again"
+        printf "Do you want to install the x-ui (Tip : If you have x-ui, all its information will be deleted)? (y/n): "
+        read installxui
+    done
+    lowermup=$(echo "$installxui" | tr '[:upper:]' '[:lower:]')
+    if [[ "$lowermup" == "y" ]]
+    then
+        mkdir /etc/x-ui/
+        wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/tunnel/ir.db -O /etc/x-ui/x-ui.db
+        echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+    fi
 elif [[ $op -eq 2 ]]
 then
     printf "\n${White}Iran IPV4 : ${Color_Off}"
@@ -102,13 +140,39 @@ then
         read loipv6
     done
     myip=$(hostname -I | awk '{print $1}')
-    oldfile=$(cat /etc/rc.local)
-    echo '#! /bin/bash' >> /etc/rc.local
-    echo "sudo ip tunnel add parsabr mode sit remote $iripv4 local $myip ttl 255" >> /etc/rc.local
-    echo 'sudo ip link set dev parsabr up' >> /etc/rc.local
-    echo "sudo ip addr add $loipv6::2/64 dev parsabr" >> /etc/rc.local
-    echo 'exit0' >> /etc/rc.local
-    echo "$oldfile" >> /etc/rc.local
+    if  grep -Fxq "#### START TUNNEL ####" /etc/rc.local
+    then
+        line_number=$(grep -n "#### START TUNNEL ####" /etc/rc.local)
+        line_number=${line_number%:*}
+        sed -i "$(($line_number-1))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        sed -i "$(($line_number))d" /etc/pam.d/sshd
+        oldfile=$(cat /etc/rc.local)
+        rm -f /etc/rc.local
+        echo '#! /bin/bash' >> /etc/rc.local
+        echo '#### START TUNNEL ####' >> /etc/rc.local
+        echo "sudo ip tunnel add parsabr mode sit remote $iripv4 local $myip ttl 255" >> /etc/rc.local
+        echo 'sudo ip link set dev parsabr up' >> /etc/rc.local
+        echo "sudo ip addr add $loipv6::2/64 dev parsabr" >> /etc/rc.local
+        echo 'exit0' >> /etc/rc.local
+        echo '#### END TUNNEL ####' >> /etc/rc.local
+        echo "$oldfile" >> /etc/rc.local
+    else
+        oldfile=$(cat /etc/rc.local)
+        rm -f /etc/rc.local
+        echo '#! /bin/bash' >> /etc/rc.local
+        echo '#### START TUNNEL ####' >> /etc/rc.local
+        echo "sudo ip tunnel add parsabr mode sit remote $iripv4 local $myip ttl 255" >> /etc/rc.local
+        echo 'sudo ip link set dev parsabr up' >> /etc/rc.local
+        echo "sudo ip addr add $loipv6::2/64 dev parsabr" >> /etc/rc.local
+        echo 'exit0' >> /etc/rc.local
+        echo '#### END TUNNEL ####' >> /etc/rc.local
+        echo "$oldfile" >> /etc/rc.local
+    fi
     chmod +x /etc/rc.local
     sudo ip link set dev parsabr down
     sudo ip link delete parsabr
