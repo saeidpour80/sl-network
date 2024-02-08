@@ -69,11 +69,13 @@ then
         read loipv6
     done
     myip=$(hostname -I | awk '{print $1}')
-    sed -i '#! /bin/bash' /etc/rc.local
-    sed -i "sudo ip tunnel add parsabr mode sit remote $khipv4 local $myip ttl 255" /etc/rc.local
-    sed -i 'sudo ip link set dev parsabr up' /etc/rc.local
-    sed -i "sudo ip addr add $loipv6::1/64 dev parsabr" /etc/rc.local
-    sed -i 'exit0' /etc/rc.local
+    oldfile=$(cat /etc/rc.local)
+    echo '#! /bin/bash' >> /etc/rc.local
+    echo "sudo ip tunnel add parsabr mode sit remote $khipv4 local $myip ttl 255" >> /etc/rc.local
+    echo 'sudo ip link set dev parsabr up' >> /etc/rc.local
+    echo "sudo ip addr add $loipv6::1/64 dev parsabr" >> /etc/rc.local
+    echo 'exit0' >> /etc/rc.local
+    echo "$oldfile" >> /etc/rc.local
     chmod +x /etc/rc.local
     sudo ip link set dev parsabr down
     sudo ip link delete parsabr
@@ -100,11 +102,13 @@ then
         read loipv6
     done
     myip=$(hostname -I | awk '{print $1}')
-    sed -i '#! /bin/bash' /etc/rc.local
-    sed -i "sudo ip tunnel add parsabr mode sit remote $iripv4 local $myip ttl 255" /etc/rc.local
-    sed -i 'sudo ip link set dev parsabr up' /etc/rc.local
-    sed -i "sudo ip addr add $loipv6::2/64 dev parsabr" /etc/rc.local
-    sed -i 'exit0' /etc/rc.local
+    oldfile=$(cat /etc/rc.local)
+    echo '#! /bin/bash' >> /etc/rc.local
+    echo "sudo ip tunnel add parsabr mode sit remote $iripv4 local $myip ttl 255" >> /etc/rc.local
+    echo 'sudo ip link set dev parsabr up' >> /etc/rc.local
+    echo "sudo ip addr add $loipv6::2/64 dev parsabr" >> /etc/rc.local
+    echo 'exit0' >> /etc/rc.local
+    echo "$oldfile" >> /etc/rc.local
     chmod +x /etc/rc.local
     sudo ip link set dev parsabr down
     sudo ip link delete parsabr
