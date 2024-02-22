@@ -66,7 +66,7 @@ do
     clear
     printf "Foreign server IP : "
     read fsip
-    if [[ "fsip" == "q" ]]
+    if [[ "$fsip" == "q" ]] && [[ "$fsip" == "Q" ]]
     then
         break
     fi
