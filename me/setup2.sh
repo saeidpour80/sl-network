@@ -66,6 +66,10 @@ do
     clear
     printf "Foreign server IP : "
     read fsip
+    if [[ "fsip" == "q" ]]
+    then
+        break
+    fi
     while [[ -z "$fsip" ]] || [[ !("$fsip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$) ]]
     do
         echo "Invalid value, Try again"
@@ -150,20 +154,23 @@ do
     fi
 done
 
-echo '#!/usr/bin/expect' >> /bin/setuptunnel.sh
-echo '' >> /bin/setuptunnel.sh
-echo 'set timeout 5' >> /bin/setuptunnel.sh
-echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$fsip" >> /bin/setuptunnel.sh
-echo 'expect "password:"' >> /bin/setuptunnel.sh
-echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
-echo 'expect "#"' >> /bin/setuptunnel.sh
-echo 'send "shutdown -h now\r"' >> /bin/setuptunnel.sh
-echo 'send "exit\r"' >> /bin/setuptunnel.sh
-echo 'expect eof' >> /bin/setuptunnel.sh
-chmod -v +x /bin/setuptunnel.sh
-setuptunnel.sh
-sleep 1s
-rm /bin/setuptunnel.sh
+if [[ $check -eq 1 ]]
+then
+    echo '#!/usr/bin/expect' >> /bin/setuptunnel.sh
+    echo '' >> /bin/setuptunnel.sh
+    echo 'set timeout 5' >> /bin/setuptunnel.sh
+    echo "spawn ssh -o StrictHostKeyChecking=no -p $fsport root@$fsip" >> /bin/setuptunnel.sh
+    echo 'expect "password:"' >> /bin/setuptunnel.sh
+    echo "send \"$(echo "$fspasse" | base64 --decode)\r\"" >> /bin/setuptunnel.sh
+    echo 'expect "#"' >> /bin/setuptunnel.sh
+    echo 'send "shutdown -h now\r"' >> /bin/setuptunnel.sh
+    echo 'send "exit\r"' >> /bin/setuptunnel.sh
+    echo 'expect eof' >> /bin/setuptunnel.sh
+    chmod -v +x /bin/setuptunnel.sh
+    setuptunnel.sh
+    sleep 1s
+    rm /bin/setuptunnel.sh
+fi
 
 clne.sh
 
