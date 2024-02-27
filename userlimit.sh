@@ -32,8 +32,9 @@ echo -e "${Purple}1) User connection limit${Color_Off}\n"
 echo -e "${Cyan}2) User connection limit + User expiration date${Color_Off}\n"
 echo -e "${Purple}3) User connection limit + Set expiration date after first connection${Color_Off}\n"
 echo -e "${Cyan}4) User connection limit + User expiration date + Set expiration date after first connection${Color_Off}\n"
-echo -e "${Red}5) Remove script${Color_Off}\n"
-echo -e "${Yellow}6) Exit${Color_Off}\n"
+echo -e "${Purple}5) Set expiration date after first connection${Color_Off}\n"
+echo -e "${Red}6) Remove script${Color_Off}\n"
+echo -e "${Yellow}7) Exit${Color_Off}\n"
 printf "\n"
 printf "${White}Choose one of the options : ${Color_Off}"
 read op
@@ -155,6 +156,32 @@ then
     echo '' >> /etc/userlimit
     echo -e "\n${Green}Successful${Color_Off}"
 elif [[ $op -eq 5 ]]
+then
+    printf "\n${White}Set the expiration date for how many days after the first connection ? : ${Color_Off}"
+    read edafc
+    while [[ -z "$edafc" ]] || [[ !("$edafc" =~ ^[0-9]+$) ]]
+    do
+        echo -e "\n${Red}Invalid value, Try again${Color_Off}"
+        printf "${White}Set the expiration date for how many days after the first connection ? : ${Color_Off}"
+        read edafc
+    done
+    { rm /etc/userlimit; } &> /dev/null
+    echo '#! /bin/bash' >> /etc/userlimit
+    echo '' >> /etc/userlimit
+    echo 'if [[ "$PAM_USER" != "root" ]]' >> /etc/userlimit
+    echo 'then' >> /etc/userlimit
+    echo '    getuserexpirationdate=$(chage -l "$PAM_USER" | grep "Account expires")' >> /etc/userlimit
+    echo '    gued=${getuserexpirationdate#*: }' >> /etc/userlimit
+    echo '    if [[ "$gued" == "never" ]]' >> /etc/userlimit
+    echo '    then' >> /etc/userlimit
+    echo "        edafc_b=$(($edafc + 1))" >> /etc/userlimit
+    echo '        setuseraccountexpires=$(date -d "+$edafc_b days" +%Y-%m-%d)' >> /etc/userlimit
+    echo '        usermod -e "$setuseraccountexpires" "$PAM_USER"' >> /etc/userlimit
+    echo '    fi' >> /etc/userlimit
+    echo 'fi' >> /etc/userlimit
+    echo '' >> /etc/userlimit
+    echo -e "\n${Green}Successful${Color_Off}"
+elif [[ $op -eq 6 ]]
 then
     printf "\n${Red}Are you sure you want to remove the script ? (y/n): ${Color_Off}"
     read rs
