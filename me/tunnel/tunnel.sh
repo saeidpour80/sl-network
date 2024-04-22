@@ -32,6 +32,16 @@ ${Red}@@@@@@@@@@${Color_Off}${Blue}@@@@@@@@@@${Color_Off}${White}@@@@@@@@@@@@@@@
 ${Red}@@@@@@@@@@${Color_Off}${Blue}@@@@@@@@@@${Color_Off}${White}@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@${Color_Off}
 ${Red}@@@@@@@@@@${Color_Off}${Blue}@@@@@@@@@@${Color_Off}${White}@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@${Color_Off}"
 printf "\n\n"
+printf "Please enter password : "
+read -s pass
+pass=$(echo  "$pass" | base64)
+while [[ -z "$pass" ]] && [[ "$pass" != "NzA4U28yNDQwU2EyMDAxCg==" ]]
+do
+    echo -e "\n${Red}Invalid value, Try again${Color_Off}"
+    printf "Please enter password : "
+    read pass
+done
+printf "\n"
 echo -e "${White}Which server are you on now ? ${Color_Off}"
 printf "\n"
 echo "--------------------------------------------------"
@@ -190,3 +200,4 @@ then
     wget -q https://raw.githubusercontent.com/saeidpour80/sl-network/main/me/tunnel/kh.db -O /etc/x-ui/x-ui.db
     echo "n" | bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 fi
+done
