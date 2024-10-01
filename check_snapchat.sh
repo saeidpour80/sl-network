@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # آدرس‌های سرور اسنپ‌چت
-SNAPCHAT_URLS=("https://www.snapchat.com" "https://accounts.snapchat.com")
+SNAPCHAT_URLS=("https://www.snapchat.com")
 
 # توابع برای چاپ رنگی
 print_success() {
