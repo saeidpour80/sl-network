@@ -33,16 +33,4 @@ for SNAPCHAT_URL in "${SNAPCHAT_URLS[@]}"; do
         print_error "HTTP access failed for ${SNAPCHAT_URL} with response code: $HTTP_RESPONSE"
         continue  # ادامه به URL بعدی
     fi
-
-    # مرحله 3: بررسی دیگر وضعیت‌ها
-    echo "Checking additional HTTP responses for ${SNAPCHAT_URL}..."
-    HTTP_DETAIL=$(curl -s -I "$SNAPCHAT_URL")
-
-    if echo "$HTTP_DETAIL" | grep -q "200 OK"; then
-        print_success "You are likely able to use Snapchat with this VPN through ${SNAPCHAT_URL}."
-    else
-        print_error "There may be restrictions on using Snapchat with this VPN through ${SNAPCHAT_URL}."
-    fi
 done
-
-echo -e "\nAll checks completed."
