@@ -130,17 +130,22 @@ check_spclient() {
 }
 
 # Optional traceroute if present
+# Optional traceroute only on failure (fast mode)
 do_traceroute() {
     local host="$1"
+    local last_status="$2" # pass 0 for success, 1 for fail
+
+    # Run traceroute ONLY if previous check failed
+    if [ "$last_status" -eq 0 ]; then return; fi
+
     if command -v traceroute >/dev/null 2>&1; then
-        yellow "→ traceroute to $host (first 8 hops):"
-        traceroute -m 8 "$host" || true
+        yellow "→ Connectivity issue detected — fast traceroute (4 hops, 1 probe):"
+        traceroute -m 4 -q 1 "$host" || true
     elif command -v tracepath >/dev/null 2>&1; then
-        yellow "→ tracepath to $host (first 8 hops):"
+        yellow "→ Connectivity issue detected — fast tracepath (4 hops):"
         tracepath "$host" || true
     fi
 }
-
 # Main loop
 for URL in "${TARGET_SITES[@]}"; do
     HOST=$(echo "$URL" | awk -F/ '{print $3}')
