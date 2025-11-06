@@ -136,17 +136,21 @@ do_traceroute() {
     local last_status="$2" # pass 0 for success, 1 for fail
 
     # Run traceroute ONLY if previous check failed
-    if [ "$last_status" -eq 0 ]; then return; fi
+    if [ "${last_status:-0}" -eq 0 ]; then return; fi
+
+    # Prefer tracepath (stops faster) — fallback to traceroute
+    if command -v tracepath >/dev/null 2>&1; then
+        yellow "→ Connectivity issue detected — fast tracepath (max 4 hops):"
+        tracepath -m 4 "$host" 2>/dev/null || true
+        return
+    fi
 
     if command -v traceroute >/dev/null 2>&1; then
-        yellow "→ Connectivity issue detected — fast traceroute (4 hops, 1 probe):"
-        traceroute -m 4 -q 1 -w 1 --back "$host" || true
-    elif command -v tracepath >/dev/null 2>&1; then
-        yellow "→ Connectivity issue detected — fast tracepath (4 hops):"
-        tracepath "$host" || true
+        yellow "→ Connectivity issue detected — fast traceroute (4 hops, 1 probe, 1s timeout):"
+        traceroute -m 4 -q 1 -w 1 "$host" 2>/dev/null || true
+        return
     fi
-}
-# Main loop
+}# Main loop
 for URL in "${TARGET_SITES[@]}"; do
     HOST=$(echo "$URL" | awk -F/ '{print $3}')
 
