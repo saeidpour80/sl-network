@@ -140,7 +140,7 @@ do_traceroute() {
 
     if command -v traceroute >/dev/null 2>&1; then
         yellow "→ Connectivity issue detected — fast traceroute (4 hops, 1 probe):"
-        traceroute -m 4 -q 1 "$host" || true
+        traceroute -m 4 -q 1 -w 1 --back "$host" || true
     elif command -v tracepath >/dev/null 2>&1; then
         yellow "→ Connectivity issue detected — fast tracepath (4 hops):"
         tracepath "$host" || true
