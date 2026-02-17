@@ -5,90 +5,66 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m' 
 
 echo -e "${BLUE}==============================================${NC}"
-echo -e "${BLUE}   Advanced Service Availability Checker      ${NC}"
+echo -e "${BLUE}   Stealth Connectivity Checker (v3.0)        ${NC}"
 echo -e "${BLUE}==============================================${NC}"
 
-# User Agent واقعی برای دور زدن برخی محدودیت‌های ربات
-UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+# استفاده از هدرهای پیشرفته‌تر برای شبیه‌سازی دقیق مرورگر
+UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
 
-check_service() {
+check_stealth() {
     local name=$1
     local url=$2
-    local search_str=$3 # کلمه‌ای که اگر در متن باشد یعنی "بلاک" شده‌ایم
-    
+    local block_keyword=$3
+
     echo -n -e "Checking $name... "
     
-    # دریافت محتوا و کد وضعیت
-    local response=$(curl -s -L -A "$UA" --max-time 10 "$url")
-    local code=$(curl -s -L -o /dev/null -w "%{http_code}" -A "$UA" --max-time 10 "$url")
+    # استفاده از --compressed و هدرهای اضافی برای فریب دادن سیستم ضد ربات
+    local response=$(curl -s -L -A "$UA" \
+        -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" \
+        -H "Accept-Language: en-US,en;q=0.5" \
+        --compressed --max-time 10 "$url")
 
-    if [[ "$code" == "403" || "$code" == "401" ]]; then
-        echo -e "${RED}✘ Blocked (HTTP $code)${NC}"
-    elif [[ -n "$search_str" && "$response" == *"$search_str"* ]]; then
-        echo -e "${RED}✘ Restricted (Region Blocked)${NC}"
-    elif [[ "$code" == "200" || "$code" == "302" ]]; then
-        echo -e "${GREEN}✔ Available${NC}"
+    if echo "$response" | grep -iq "$block_keyword"; then
+        echo -e "${RED}✘ Restricted (Region Lock Detected)${NC}"
     else
-        echo -e "${YELLOW}⚠ Unknown (HTTP $code)${NC}"
+        local code=$(curl -s -L -o /dev/null -w "%{http_code}" -A "$UA" --max-time 10 "$url")
+        
+        # در مورد چت‌جی‌پی‌تی و اینستاگرام، حتی کد 403 همیشه به معنی بلاک بودن آی‌پی نیست
+        if [[ "$code" == "200" || "$code" == "302" || "$code" == "301" ]]; then
+            echo -e "${GREEN}✔ Available${NC}"
+        elif [[ "$code" == "403" && "$name" == "ChatGPT" ]]; then
+            echo -e "${YELLOW}⚠ Possible (Cloudflare blocked Script, but Browser might work)${NC}"
+        else
+            echo -e "${RED}✘ Blocked/Error (HTTP $code)${NC}"
+        fi
     fi
 }
 
-# 1. تست اختصاصی Gemini (بررسی منطقه جغرافیایی)
-check_gemini() {
-    echo -n -e "Checking Gemini... "
-    # گوگل اگر آی‌پی دیتاسنتر یا ایران باشد، در پاسخ کلمه "not available" یا ریدایرکت به صفحه خطا دارد
-    local resp=$(curl -s -L -A "$UA" "https://gemini.google.com/app")
-    if [[ "$resp" == *"is not currently supported"* || "$resp" == *"isn't available"* ]]; then
-        echo -e "${RED}✘ Restricted (Not available in your country)${NC}"
-    else
-        echo -e "${GREEN}✔ Available${NC}"
-    fi
-}
+# --- تست‌ها ---
 
-# 2. تست اختصاصی OpenAI (ChatGPT)
-check_openai() {
-    echo -n -e "Checking ChatGPT... "
-    # OpenAI معمولاً روی آی‌پی‌های دیتاسنتر کد 403 یا صفحه Cloudflare Access Denied می‌دهد
-    local code=$(curl -s -o /dev/null -w "%{http_code}" -A "$UA" "https://chatgpt.com")
-    if [[ "$code" == "403" ]]; then
-        echo -e "${RED}✘ Blocked (Cloudflare/Access Denied)${NC}"
-    else
-        echo -e "${GREEN}✔ Available${NC}"
-    fi
-}
+# جمنای: چک کردن متن اروری که در عکستان بود
+check_stealth "Gemini" "https://gemini.google.com/" "supported in your country"
 
-# 3. تست اختصاصی Spotify
-check_spotify() {
-    echo -n -e "Checking Spotify... "
-    # بررسی اندپوینت اصلی کلاینت اسپاتیفای
-    local code=$(curl -s -o /dev/null -w "%{http_code}" "https://spclient.wg.spotify.com/signup/v1/check-parameters")
-    if [[ "$code" == "200" || "$code" == "405" ]]; then # 405 هم یعنی اندپوینت زنده است
-        echo -e "${GREEN}✔ Available${NC}"
-    else
-        echo -e "${RED}✘ Blocked/Issue ($code)${NC}"
-    fi
-}
+# چت‌جی‌پی‌تی: چک کردن نقطه انتهایی که کمتر حساس است
+check_stealth "ChatGPT" "https://chatgpt.com/favicon.ico" "access denied"
 
-# --- شروع اجرای تست‌ها ---
+# اینستاگرام: اینستاگرام روی دیتاسنتر خیلی حساس است، تست با یک زیرصفحه
+check_stealth "Instagram" "https://www.instagram.com/robots.txt" "login"
 
-# سرویس‌های ساده با بررسی کلمات کلیدی بلاک
-check_service "Snapchat" "https://www.snapchat.com" "denied"
-check_gemini
-check_openai
-check_service "TikTok" "https://www.tiktok.com" "not available"
-check_service "Instagram" "https://www.instagram.com" "login"
-check_service "Reddit" "https://www.reddit.com" "blocked"
-check_spotify
+# تیک‌تاک
+check_stealth "TikTok" "https://www.tiktok.com/" "not available"
 
-# بررسی کلی لوکیشن آی‌پی برای اطمینان
+# اسپاتیفای (روش مستقیم)
+echo -n -e "Checking Spotify... "
+if curl -s -I --max-time 5 "https://api.spotify.com" | grep -q "HTTP"; then
+    echo -e "${GREEN}✔ Available${NC}"
+else
+    echo -e "${RED}✘ Blocked${NC}"
+fi
+
 echo -e "${BLUE}----------------------------------------------${NC}"
-IP_COUNTRY=$(curl -s https://ipinfo.io/country)
-IP_ORG=$(curl -s https://ipinfo.io/org)
-echo -e "Server IP Country: ${YELLOW}$IP_COUNTRY${NC}"
-echo -e "ISP/Org: ${YELLOW}$IP_ORG${NC}"
-
+echo -e "Your IP Country: ${YELLOW}$(curl -s https://ipinfo.io/country)${NC}"
 echo -e "${BLUE}==============================================${NC}"
-echo -e "✅ Test Complete."
