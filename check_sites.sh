@@ -1,70 +1,151 @@
 #!/bin/bash
 
-# COLORS
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' 
+# Final VPN + Streaming/Spotify Check Script
+# Optimized for speed, no long traceroute hangs
+# Run: bash <(curl -Ls https://raw.githubusercontent.com/saeidpour80/sl-network/main/check_sites.sh)
 
-echo -e "${BLUE}==============================================${NC}"
-echo -e "${BLUE}   Stealth Connectivity Checker (v3.0)        ${NC}"
-echo -e "${BLUE}==============================================${NC}"
+TARGET_SITES=(
+    "https://www.snapchat.com"
+    "https://gemini.google.com"
+    "https://chat.openai.com"
+    "https://www.instagram.com"
+    "https://www.tiktok.com"
+    "https://www.reddit.com"
 
-# استفاده از هدرهای پیشرفته‌تر برای شبیه‌سازی دقیق مرورگر
-UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+    # Spotify
+    "https://open.spotify.com"
+    "https://api.spotify.com"
+    "https://spclient.wg.spotify.com"
+    "https://apresolve.spotify.com"
+    "https://spotify.com"
+)
 
-check_stealth() {
-    local name=$1
-    local url=$2
-    local block_keyword=$3
+# Colors
+green()  { echo -e "\e[32m$1\e[0m"; }
+red()    { echo -e "\e[31m$1\e[0m"; }
+yellow() { echo -e "\e[33m$1\e[0m"; }
 
-    echo -n -e "Checking $name... "
-    
-    # استفاده از --compressed و هدرهای اضافی برای فریب دادن سیستم ضد ربات
-    local response=$(curl -s -L -A "$UA" \
-        -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" \
-        -H "Accept-Language: en-US,en;q=0.5" \
-        --compressed --max-time 10 "$url")
+is_success_code() {
+    [[ "$1" =~ ^2[0-9][0-9]$ || "$1" =~ ^3[0-9][0-9]$ ]]
+}
 
-    if echo "$response" | grep -iq "$block_keyword"; then
-        echo -e "${RED}✘ Restricted (Region Lock Detected)${NC}"
+check_dns() {
+    local host="$1"
+    if getent hosts "$host" > /dev/null; then
+        green "✔ DNS resolved for $host"
+        return 0
     else
-        local code=$(curl -s -L -o /dev/null -w "%{http_code}" -A "$UA" --max-time 10 "$url")
-        
-        # در مورد چت‌جی‌پی‌تی و اینستاگرام، حتی کد 403 همیشه به معنی بلاک بودن آی‌پی نیست
-        if [[ "$code" == "200" || "$code" == "302" || "$code" == "301" ]]; then
-            echo -e "${GREEN}✔ Available${NC}"
-        elif [[ "$code" == "403" && "$name" == "ChatGPT" ]]; then
-            echo -e "${YELLOW}⚠ Possible (Cloudflare blocked Script, but Browser might work)${NC}"
+        red "✘ DNS resolution failed for $host"
+        return 1
+    fi
+}
+
+check_ping() {
+    local host="$1"
+    if ping -c 1 -W 1 "$host" > /dev/null 2>&1; then
+        green "✔ Ping OK to $host"
+    else
+        yellow "⚠ Ping failed to $host (ICMP may be blocked)"
+    fi
+}
+
+check_tcp_port() {
+    local host="$1"
+    local port="$2"
+    if command -v nc >/dev/null 2>&1; then
+        if timeout 2 nc -z "$host" "$port" >/dev/null 2>&1; then
+            green "✔ TCP $port open on $host"
         else
-            echo -e "${RED}✘ Blocked/Error (HTTP $code)${NC}"
+            yellow "⚠ TCP $port filtered/closed on $host"
+        fi
+    else
+        if timeout 2 bash -c "echo > /dev/tcp/$host/$port" 2>/dev/null; then
+            green "✔ TCP $port open on $host"
+        else
+            yellow "⚠ TCP $port filtered/closed on $host"
         fi
     fi
 }
 
-# --- تست‌ها ---
+check_tls() {
+    local host="$1"
+    echo | openssl s_client -servername "$host" -connect "$host:443" -brief > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        green "✔ TLS OK for $host"
+    else
+        red "✘ TLS failed for $host"
+    fi
+}
 
-# جمنای: چک کردن متن اروری که در عکستان بود
-check_stealth "Gemini" "https://gemini.google.com/" "supported in your country"
+check_http() {
+    local url="$1"
+    local ua="Mozilla/5.0 Chrome"
+    local code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 -A "$ua" "$url")
+    if is_success_code "$code"; then
+        green "✔ HTTP OK ($code) $url"
+    else
+        yellow "⚠ HTTP $code $url"
+    fi
+}
 
-# چت‌جی‌پی‌تی: چک کردن نقطه انتهایی که کمتر حساس است
-check_stealth "ChatGPT" "https://chatgpt.com/favicon.ico" "access denied"
+check_mobile_http() {
+    local url="$1"
+    local ua="Mozilla/5.0 iPhone"
+    local code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 -A "$ua" "$url")
+    if is_success_code "$code"; then
+        green "✔ Mobile HTTP OK ($code) $url"
+    else
+        yellow "⚠ Mobile HTTP $code $url"
+    fi
+}
 
-# اینستاگرام: اینستاگرام روی دیتاسنتر خیلی حساس است، تست با یک زیرصفحه
-check_stealth "Instagram" "https://www.instagram.com/robots.txt" "login"
+check_spclient() {
+    local code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 https://spclient.wg.spotify.com)
+    if is_success_code "$code"; then
+        green "✔ Spotify core OK ($code)"
+    else
+        red "✘ Spotify core issue ($code)"
+    fi
+}
 
-# تیک‌تاک
-check_stealth "TikTok" "https://www.tiktok.com/" "not available"
+# Fast traceroute only when needed
+do_traceroute() {
+    local host="$1"
+    local failed="$2"
+    [ "${failed:-0}" -eq 0 ] && return
 
-# اسپاتیفای (روش مستقیم)
-echo -n -e "Checking Spotify... "
-if curl -s -I --max-time 5 "https://api.spotify.com" | grep -q "HTTP"; then
-    echo -e "${GREEN}✔ Available${NC}"
-else
-    echo -e "${RED}✘ Blocked${NC}"
-fi
+    if command -v tracepath >/dev/null 2>&1; then
+        yellow "→ Fast tracepath (4 hops)"
+        tracepath -m 4 "$host" 2>/dev/null || true
+        return
+    fi
 
-echo -e "${BLUE}----------------------------------------------${NC}"
-echo -e "Your IP Country: ${YELLOW}$(curl -s https://ipinfo.io/country)${NC}"
-echo -e "${BLUE}==============================================${NC}"
+    if command -v traceroute >/dev/null 2>&1; then
+        yellow "→ Fast traceroute (4 hops, 1 probe, 1s)"
+        traceroute -m 4 -q 1 -w 1 "$host" 2>/dev/null || true
+        return
+    fi
+}
+
+# MAIN
+for URL in "${TARGET_SITES[@]}"; do
+    HOST=$(echo "$URL" | awk -F/ '{print $3}')
+    echo "======================================"
+    echo "🔍 Checking $URL"
+
+    check_dns "$HOST"; dns=$?
+    check_ping "$HOST"
+    check_tcp_port "$HOST" 443
+    check_tcp_port "$HOST" 80
+    check_tls "$HOST"
+    check_http "$URL"; http=$?
+    check_mobile_http "$URL"
+
+    [[ "$HOST" == *"spotify"* ]] && check_spclient
+
+    do_traceroute "$HOST" $http
+    echo
+done
+
+echo "✅ Test Complete"
+echo "If Spotify app still fails: log out, clear cache, re-login."
